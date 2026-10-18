@@ -3,6 +3,7 @@
 import { clock } from '../format.js';
 import { newId } from '../groups.js';
 import { createSession } from '../log.js';
+import { cheer } from '../motivation.js';
 import { Workout, buildPhases, nextLine, phaseTitle, progressLine } from '../workout.js';
 import { byId, twoTap } from './dom.js';
 
@@ -23,6 +24,8 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
   const bar = byId('t-bar');
   const endBtn = /** @type {HTMLButtonElement} */ (byId('t-end'));
   const mainBtn = byId('t-pause');
+  const wallaby = byId('wb-done');
+  const wallabyText = byId('wb-done-text');
 
   /** @type {Workout|null} */
   let workout = null;
@@ -46,6 +49,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
     workout = new Workout(buildPhases(plan, group), now());
     mainBtn.textContent = 'Pause';
     endBtn.hidden = false;
+    wallaby.hidden = true;
     setMode('prep');
     feedback.keepAwake();
     feedback.beep(660, 0.15);
@@ -118,8 +122,12 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
       nextEl.textContent = 'Nothing logged. Finish a full work round to log a workout.';
       return;
     }
-    const session = createSession({ settings: plan, group, completed, at: new Date(), id: newId() });
+    const at = new Date();
+    const session = createSession({ settings: plan, group, completed, at, id: newId() });
     const saved = store.addSession(session);
+    setMode('prep done');
+    wallabyText.textContent = cheer({ full }, store.state.log, at);
+    wallaby.hidden = false;
     phaseEl.textContent = full ? 'Done' : 'Ended';
     nextEl.textContent =
       `${completed === 1 ? 'round' : 'rounds'} logged` +
