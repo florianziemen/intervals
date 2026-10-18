@@ -22,6 +22,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
   const roundEl = byId('t-round');
   const elapsedEl = byId('t-elapsed');
   const bar = byId('t-bar');
+  const totalBar = byId('t-total');
   const endBtn = /** @type {HTMLButtonElement} */ (byId('t-end'));
   const mainBtn = byId('t-pause');
   const wallaby = byId('wb-done');
@@ -90,6 +91,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
     elapsedEl.textContent = clock(workout.elapsed(t) / 1000);
     nextEl.textContent = nextLine(workout.next);
     bar.style.width = `${workout.progress(t) * 100}%`;
+    totalBar.style.width = `${workout.overall(t) * 100}%`;
   }
 
   function togglePause() {
@@ -115,6 +117,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
 
     setMode('prep');
     bar.style.width = '100%';
+    totalBar.style.width = '100%';
     roundEl.textContent = '';
     elapsedEl.textContent = '';
     countEl.textContent = String(completed);
