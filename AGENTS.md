@@ -36,11 +36,12 @@ js/groups.js            Exercise groups: validation, editor parsing, notes (pure
 js/log.js               Sessions, backup format, parse and merge (pure)
 js/stats.js             Day totals, week/streak/minutes, calendar, emoji tiers (pure)
 js/workout.js           Phase list builder and the Workout engine (pure, clock injected)
+js/motivation.js        Wallaby greeting and post-workout cheer messages (pure, rng injected)
 js/storage.js           JSON over Web Storage, all access guarded
 js/store.js             App state; the only module that reads/writes storage
 js/feedback.js          Beeps (WebAudio), vibration, screen wake lock
 js/ui/dom.js            byId, el (safe element builder), twoTap
-js/ui/*-view.js         One view per section: settings, groups, history, timer, backup
+js/ui/*-view.js         One view per section: wallaby, settings, groups, history, timer, backup
 tests/*.test.js         node:test unit tests
 sw.js                   Service worker: offline cache (cache first, refresh in background)
 manifest.webmanifest    PWA manifest: name, colors, icons, standalone display
@@ -49,6 +50,7 @@ icon-512.png            App icon (purpose "any")
 icon-maskable-512.png   Android adaptive icon, artwork inside the central safe zone
 apple-touch-icon.png    iOS home-screen icon (180x180)
 wallaby-logo.svg        Logo source artwork (also inlined in index.html header)
+wallaby.svg             Full-body cartoon wallaby (“Wally”) shown with speech bubbles
 package.json            Scripts only (test, check, lint, format, serve)
 eslint.config.js        Lint rules (no plugins, runs via npx)
 .prettierrc.json        Formatting
@@ -64,8 +66,9 @@ ES modules do not load from `file://`. Always serve the folder over HTTP.
 
 ## Architecture
 
-- Pure logic modules (format, settings, groups, log, stats, workout) have no
-  DOM or storage access and are fully unit tested. Put new logic there.
+- Pure logic modules (format, settings, groups, log, stats, workout,
+  motivation) have no DOM or storage access and are fully unit tested. Put
+  new logic there.
 - `store.js` holds `{settings, groups, log}`, persists every change and
   notifies subscribers. Storage is injected (`createStore(createStorage())`),
   so tests use an in-memory backend.
@@ -176,6 +179,17 @@ History
   no exercise. Today shows "·" until a workout is logged.
 - Tapping a day shows its details in `#daydetail`. The recent workouts
   list shows the latest 25 sessions; deleting one takes two taps.
+
+Wallaby
+
+- On page load, Wally greets the user above the start button
+  (`greeting()`); the × button hides it until the next load.
+- When a logged workout ends, Wally cheers on the finish screen (`cheer()`).
+  Nothing is shown if no round was completed.
+- Messages come from fixed lists in `js/motivation.js`. When a personal
+  message applies (first workout, streak, today, biggest day, sessions this
+  week), it is picked 60% of the time; otherwise a general one (greetings
+  depend on morning/afternoon/evening).
 
 PWA bits
 
