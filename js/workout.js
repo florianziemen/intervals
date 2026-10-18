@@ -81,6 +81,8 @@ export class Workout {
   constructor(phases, now) {
     if (!phases.length) throw new Error('A workout needs at least one phase');
     this.phases = phases;
+    /** total seconds of work phases */
+    this.workTotal = phases.reduce((sum, p) => sum + (p.type === 'work' ? p.dur : 0), 0);
     this.index = 0;
     this.completed = 0;
     this.finished = false;
@@ -168,5 +170,15 @@ export class Workout {
   progress(now) {
     const done = 1 - this.remaining(now) / (this.phase.dur * 1000);
     return Math.min(1, Math.max(0, done));
+  }
+
+  /** Fraction of all work time done, 0..1 (prep, rest and breaks don't count). @param {number} now */
+  overall(now) {
+    if (this.finished) return 1;
+    if (!this.workTotal) return 0;
+    let done = 0;
+    for (let i = 0; i < this.index; i++) if (this.phases[i].type === 'work') done += this.phases[i].dur;
+    if (this.phase.type === 'work') done += this.phase.dur * this.progress(now);
+    return Math.min(1, done / this.workTotal);
   }
 }

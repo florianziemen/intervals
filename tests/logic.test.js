@@ -368,6 +368,20 @@ describe('Workout engine', () => {
     assert.equal(w.phase.type, 'rest');
   });
 
+  it('tracks overall progress over work time only', () => {
+    const w = new Workout(phases(), 0);
+    assert.equal(w.overall(2000), 0);
+    w.tick(10000);
+    assert.equal(w.overall(10000), 0.25);
+    w.tick(17000);
+    assert.equal(w.phase.type, 'rest');
+    assert.equal(w.overall(17000), 0.5);
+    w.tick(25000);
+    assert.equal(w.overall(25000), 0.75);
+    w.tick(30000);
+    assert.equal(w.overall(30000), 1);
+  });
+
   it('refuses an empty plan', () => {
     assert.throws(() => new Workout([], 0));
   });
