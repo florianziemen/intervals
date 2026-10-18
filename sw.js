@@ -1,28 +1,49 @@
 // Intervals service worker: keeps the app usable offline.
 // Serves files from the cache first, then quietly fetches fresh copies,
 // so an update you upload appears on the next launch after it's fetched.
-const CACHE = 'intervals-v2';
+const CACHE = 'intervals-v3';
 const FILES = [
   './',
   './index.html',
+  './app.css',
+  './js/main.js',
+  './js/feedback.js',
+  './js/format.js',
+  './js/groups.js',
+  './js/log.js',
+  './js/settings.js',
+  './js/stats.js',
+  './js/storage.js',
+  './js/store.js',
+  './js/workout.js',
+  './js/ui/backup-view.js',
+  './js/ui/dom.js',
+  './js/ui/groups-view.js',
+  './js/ui/history-view.js',
+  './js/ui/settings-view.js',
+  './js/ui/timer-view.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
   './icon-maskable-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(FILES)).then(() => self.skipWaiting())
+    caches
+      .open(CACHE)
+      .then((cache) => cache.addAll(FILES))
+      .then(() => self.skipWaiting()),
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys()
+    caches
+      .keys()
       .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
+      .then(() => self.clients.claim()),
   );
 });
 
@@ -35,7 +56,10 @@ self.addEventListener('fetch', (event) => {
     .then((res) => {
       if (!res || !res.ok) return res;
       const copy = res.clone();
-      return caches.open(CACHE).then((cache) => cache.put(req, copy)).then(() => res);
+      return caches
+        .open(CACHE)
+        .then((cache) => cache.put(req, copy))
+        .then(() => res);
     })
     .catch(() => null);
   event.waitUntil(fresh);
@@ -48,6 +72,6 @@ self.addEventListener('fetch', (event) => {
         if (req.mode === 'navigate') return caches.match('./index.html');
         return new Response('Offline', { status: 503, statusText: 'Offline' });
       });
-    })
+    }),
   );
 });
