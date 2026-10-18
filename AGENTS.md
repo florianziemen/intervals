@@ -158,6 +158,10 @@ Timer
   calls `tick(now)` every 100ms; it catches up across several phases if the
   page was in the background. Pausing stores the remaining milliseconds,
   resuming moves `phaseEnd` forward, and `pausedTotal` keeps elapsed time right.
+- Signals: a beep and buzz when each phase starts, a short beep in each of
+  the last 3 seconds, and a double beep halfway through work phases of
+  `HALFWAY_MIN` (8) seconds or more. On iOS, the silent switch mutes the
+  beeps and vibration isn't supported.
 - The AudioContext is created on the start tap (iOS requires a gesture).
   The Screen Wake Lock is requested at start and again when the page
   becomes visible.

@@ -65,6 +65,9 @@ export function nextLine(next) {
   return `Then ${next.label || PHASE_NAMES[next.type].toLowerCase()} ${short(next.dur)}`;
 }
 
+/** Work phases shorter than this get no halfway signal (it would run into the countdown). */
+export const HALFWAY_MIN = 8;
+
 /**
  * Runs a phase list against a monotonic clock (milliseconds). Timing comes
  * from timestamps, not tick counts, so tick() catches up across several
@@ -89,6 +92,8 @@ export class Workout {
     this.remainingMs = 0;
     /** @type {number|null} */
     this.lastSecond = null;
+    /** whether the halfway signal of the current phase was given */
+    this.halfDone = false;
   }
 
   get phase() {
@@ -102,11 +107,12 @@ export class Workout {
   /**
    * Advance to `now`.
    * @param {number} now
-   * @returns {{changed: boolean, countdown: boolean}}
-   *   changed: a new phase began; countdown: one of the last 3 seconds began
+   * @returns {{changed: boolean, countdown: boolean, halfway: boolean}}
+   *   changed: a new phase began; countdown: one of the last 3 seconds began;
+   *   halfway: a work phase of HALFWAY_MIN seconds or more passed its middle
    */
   tick(now) {
-    if (this.paused || this.finished) return { changed: false, countdown: false };
+    if (this.paused || this.finished) return { changed: false, countdown: false, halfway: false };
     let changed = false;
     while (now >= this.phaseEnd) {
       if (this.phase.type === 'work') this.completed += 1;
@@ -114,14 +120,22 @@ export class Workout {
       changed = true;
       if (this.index >= this.phases.length) {
         this.finished = true;
-        return { changed, countdown: false };
+        return { changed, countdown: false, halfway: false };
       }
       this.phaseEnd += this.phase.dur * 1000;
+      this.halfDone = false;
     }
     const sec = Math.ceil(this.remaining(now) / 1000);
     const countdown = !changed && sec <= 3 && sec > 0 && sec !== this.lastSecond && this.phase.dur > 3;
     this.lastSecond = sec;
-    return { changed, countdown };
+    const p = this.phase;
+    let halfway = false;
+    if (!this.halfDone && p.type === 'work' && p.dur >= HALFWAY_MIN && this.remaining(now) <= p.dur * 500) {
+      this.halfDone = true;
+      // After catching up from the background, the middle is already past: stay quiet.
+      halfway = !changed;
+    }
+    return { changed, countdown, halfway };
   }
 
   /** @param {number} now */
