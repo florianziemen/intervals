@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Intervals</title>
+<meta name="theme-color" content="#2B3FE0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Intervals">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 :root{
   --bg:#EEF1F5; --surface:#FFFFFF; --ink:#151A22; --muted:#5B6574; --line:#D5DBE3;
@@ -30,7 +38,8 @@ body{margin:0;background:var(--bg);color:var(--ink);
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.45;
   -webkit-tap-highlight-color:transparent}
 main{max-width:520px;margin:0 auto;padding:20px 18px 48px}
-h1{font-size:1.05rem;font-weight:700;margin:4px 0 18px;letter-spacing:-.01em}
+h1{font-size:1.15rem;font-weight:700;margin:4px 0 18px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+h1 .logo{height:44px;width:auto;flex:none}
 h2{font-size:1.25rem;margin:36px 0 12px;letter-spacing:-.01em}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,textarea:focus-visible{outline:3px solid var(--work);outline-offset:2px}
@@ -137,7 +146,26 @@ textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:
 </head>
 <body>
 <main>
-  <h1>Intervals</h1>
+  <h1><svg class="logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="120 22 272 432" >
+<defs><clipPath id="lhc"><path d="M256 184 C332 184 376 224 374 282 C372 332 330 362 314 402 C302 430 282 440 256 440 C230 440 210 430 198 402 C182 362 140 332 138 282 C136 224 180 184 256 184 Z"/></clipPath></defs>
+<g stroke="#2E2219" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+  <clipPath id="lec0"><path d="M200 220 C150 176 120 92 140 34 C196 56 246 136 256 200 Z"/></clipPath><path d="M200 220 C150 176 120 92 140 34 C196 56 246 136 256 200 Z" fill="#C38E62"/><path d="M210 200 C178 166 156 104 160 64 C192 88 224 142 236 192 Z" fill="#F3B5A0" stroke="none"/><path d="M120 20 L130 86 Q170 92 214 66 L200 20 Z" fill="#5B3B26" stroke="none" clip-path="url(#lec0)"/><path d="M200 220 C150 176 120 92 140 34 C196 56 246 136 256 200 Z" fill="none"/><clipPath id="lec1"><path d="M312 220 C362 176 392 92 372 34 C316 56 266 136 256 200 Z"/></clipPath><path d="M312 220 C362 176 392 92 372 34 C316 56 266 136 256 200 Z" fill="#C38E62"/><path d="M302 200 C334 166 356 104 352 64 C320 88 288 142 276 192 Z" fill="#F3B5A0" stroke="none"/><path d="M392 20 L382 86 Q342 92 298 66 L312 20 Z" fill="#5B3B26" stroke="none" clip-path="url(#lec1)"/><path d="M312 220 C362 176 392 92 372 34 C316 56 266 136 256 200 Z" fill="none"/>
+  <path d="M256 184 C332 184 376 224 374 282 C372 332 330 362 314 402 C302 430 282 440 256 440 C230 440 210 430 198 402 C182 362 140 332 138 282 C136 224 180 184 256 184 Z" fill="#C38E62"/>
+  <g clip-path="url(#lhc)">
+    <path d="M90 266 Q256 198 422 266 L422 230 Q256 162 90 230Z" fill="#F3E25A" stroke-width="7"/>
+    <ellipse cx="256" cy="402" rx="74" ry="64" fill="#F2DFC7" stroke="none"/>
+  </g>
+  <path d="M256 184 C332 184 376 224 374 282 C372 332 330 362 314 402 C302 430 282 440 256 440 C230 440 210 430 198 402 C182 362 140 332 138 282 C136 224 180 184 256 184 Z" fill="none"/>
+  <ellipse cx="208" cy="290" rx="18" ry="24" fill="#2E2219" stroke="none"/>
+  <ellipse cx="304" cy="290" rx="18" ry="24" fill="#2E2219" stroke="none"/>
+  <circle cx="215" cy="280" r="7" fill="#fff" stroke="none"/>
+  <circle cx="311" cy="280" r="7" fill="#fff" stroke="none"/>
+  <ellipse cx="176" cy="346" rx="15" ry="9" fill="#EE9282" stroke="none" opacity=".8"/>
+  <ellipse cx="336" cy="346" rx="15" ry="9" fill="#EE9282" stroke="none" opacity=".8"/>
+  <path d="M228 360 Q256 346 284 360 Q278 388 256 392 Q234 388 228 360Z" fill="#2E2219" stroke-width="4"/>
+  <ellipse cx="248" cy="361" rx="7" ry="4" fill="#fff" stroke="none" opacity=".55"/>
+  <path d="M256 392 L256 404 M238 410 Q247 420 256 406 Q265 420 274 410" fill="none" stroke-width="7"/>
+</g></svg>Intervals</h1>
 
   <button class="start" id="startBtn" aria-label="Start workout">
     <span class="big" id="startBig">10 × 30s</span>
@@ -612,6 +640,13 @@ textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:
     });
   })();
   renderSettings();renderHistory();
+
+  /* ---------- Offline support ---------- */
+  if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
+    window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
+  }
+  // Ask the browser not to clear this site's storage when space runs low.
+  try{if(navigator.storage&&navigator.storage.persist) navigator.storage.persist().catch(function(){})}catch(e){}
 })();
 </script>
 </body>
