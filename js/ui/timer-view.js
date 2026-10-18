@@ -59,7 +59,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
 
   function update() {
     if (!workout) return;
-    const { changed, countdown } = workout.tick(now());
+    const { changed, countdown, halfway } = workout.tick(now());
     if (workout.finished) {
       finish(true);
       return;
@@ -70,6 +70,10 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
       feedback.buzz(work ? [200, 80, 200] : 300);
     } else if (countdown) {
       feedback.beep(660, 0.12);
+    } else if (halfway) {
+      feedback.beep(990, 0.1);
+      setTimeout(() => feedback.beep(990, 0.1), 160);
+      feedback.buzz([100, 60, 100]);
     }
     render();
   }
