@@ -91,6 +91,12 @@
         >Intervals
       </h1>
 
+      <div class="wallaby" id="wb-home" role="status">
+        <img src="wallaby.svg" alt="" width="220" height="296" />
+        <p class="bubble" id="wb-home-text"></p>
+        <button class="wb-close" id="wb-close" aria-label="Dismiss the wallaby">×</button>
+      </div>
+
       <button class="start" id="startBtn" aria-label="Start workout">
         <span class="big" id="startBig">10 × 30s</span>
         <span class="sub" id="startSub">30s rest · 9:30 total · tap to start</span>
@@ -210,6 +216,10 @@
         <div class="t-phase" id="t-phase">Get ready</div>
         <div class="t-count" id="t-count">5</div>
         <div class="t-next" id="t-next"></div>
+        <div class="wallaby" id="wb-done" hidden>
+          <img src="wallaby.svg" alt="" width="220" height="296" />
+          <p class="bubble" id="wb-done-text"></p>
+        </div>
       </div>
       <div class="bar"><div class="barfill" id="t-bar"></div></div>
       <div class="t-btns">

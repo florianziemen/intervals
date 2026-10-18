@@ -8,10 +8,12 @@ import { initGroupsView } from './ui/groups-view.js';
 import { initHistoryView } from './ui/history-view.js';
 import { initSettingsView } from './ui/settings-view.js';
 import { initTimerView } from './ui/timer-view.js';
+import { initWallabyView } from './ui/wallaby-view.js';
 
 const store = createStore(createStorage());
 const feedback = createFeedback(() => store.state.settings.sound);
 
+initWallabyView(store);
 initSettingsView(store);
 initGroupsView(store);
 initHistoryView(store);
