@@ -1,7 +1,7 @@
 // Intervals service worker: keeps the app usable offline.
 // Serves files from the cache first, then quietly fetches fresh copies,
 // so an update you upload appears on the next launch after it's fetched.
-const CACHE = 'intervals-v3';
+const CACHE = 'intervals-v4';
 const FILES = [
   './',
   './index.html',
@@ -11,6 +11,7 @@ const FILES = [
   './js/format.js',
   './js/groups.js',
   './js/log.js',
+  './js/motivation.js',
   './js/settings.js',
   './js/stats.js',
   './js/storage.js',
@@ -22,11 +23,13 @@ const FILES = [
   './js/ui/history-view.js',
   './js/ui/settings-view.js',
   './js/ui/timer-view.js',
+  './js/ui/wallaby-view.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
   './icon-maskable-512.png',
   './apple-touch-icon.png',
+  './wallaby.svg',
 ];
 
 self.addEventListener('install', (event) => {

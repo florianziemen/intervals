@@ -405,6 +405,88 @@ textarea {
   color: var(--muted);
 }
 
+/* Wallaby with a speech bubble */
+.wallaby {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 0 0 18px;
+}
+.wallaby img {
+  flex: none;
+  width: 76px;
+  height: auto;
+  animation: hop 0.9s ease-out both;
+}
+.bubble {
+  position: relative;
+  flex: 1;
+  margin: 0 0 40px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  font-weight: 600;
+  animation: pop 0.35s 0.5s ease-out both;
+}
+.bubble::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  bottom: 14px;
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transform: rotate(45deg);
+}
+#wb-home .bubble {
+  padding-right: 44px;
+}
+.wb-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.4rem;
+}
+@keyframes hop {
+  0% {
+    transform: translateY(40px) scaleY(0.8);
+    opacity: 0;
+  }
+  40% {
+    transform: translateY(-18px);
+    opacity: 1;
+  }
+  65% {
+    transform: translateY(0) scaleY(0.92);
+  }
+  80% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
 /* Exercise groups */
 .groups {
   margin-top: 22px;
@@ -562,11 +644,24 @@ textarea {
   font-size: 1.1rem;
   font-weight: 700;
 }
+.timer .wallaby {
+  margin: 22px 0 0;
+}
+.timer .wallaby img {
+  width: min(28vw, 120px);
+}
+.timer.done .t-count {
+  font-size: min(30vw, 22vh);
+}
 .timer.paused .t-count {
   opacity: 0.45;
 }
 @media (prefers-reduced-motion: reduce) {
   .timer {
     transition: none;
+  }
+  .wallaby img,
+  .bubble {
+    animation: none;
   }
 }
