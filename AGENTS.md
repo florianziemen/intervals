@@ -167,6 +167,9 @@ Timer
   becomes visible.
 - Settings and group are captured at start; the session is logged when
   the workout ends. Ending early takes two taps.
+- A thin bar at the top shows overall progress (`Workout.overall()`): the
+  share of total work time done. Prep, rest and breaks don't advance it.
+  The bar above the buttons shows progress through the current phase.
 - Overlay colors by phase: work = `--work` (cobalt), rest = `--rest`
   (yellow), prep and break = `--prep`.
 

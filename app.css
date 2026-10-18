@@ -607,9 +607,12 @@ textarea {
   margin: 6px 0 0 -0.04em;
 }
 .t-next {
-  font-size: 1.05rem;
-  opacity: 0.8;
-  margin-top: 10px;
+  font-size: clamp(1.4rem, 7vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.15;
+  opacity: 0.85;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
 }
 .bar {
   position: relative;
@@ -617,6 +620,10 @@ textarea {
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 18px;
+}
+.bar.total {
+  height: 6px;
+  margin-bottom: 12px;
 }
 .bar::before {
   content: '';
