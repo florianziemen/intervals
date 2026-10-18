@@ -1,0 +1,15 @@
+{
+  "name": "intervals",
+  "private": true,
+  "description": "HIIT interval timer with an on-device workout log. No dependencies, no build step.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check sw.js && node -e \"JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))\"",
+    "lint": "npx --yes eslint@9 .",
+    "format": "npx --yes prettier@3 --write .",
+    "format:check": "npx --yes prettier@3 --check .",
+    "serve": "python3 -m http.server 8000"
+  }
+}
