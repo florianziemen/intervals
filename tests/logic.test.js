@@ -309,7 +309,7 @@ describe('Workout engine', () => {
 
   it('advances through phases by timestamp', () => {
     const w = new Workout(phases(), 0);
-    assert.deepEqual(w.tick(1000), { changed: false, countdown: false });
+    assert.deepEqual(w.tick(1000), { changed: false, countdown: false, halfway: false });
     assert.equal(w.tick(5000).changed, true);
     assert.equal(w.phase.type, 'work');
     assert.equal(w.remaining(7500), 7500);
@@ -334,11 +334,31 @@ describe('Workout engine', () => {
     assert.deepEqual(signals, [false, true, false, true, true, false]);
   });
 
+  it('signals the middle of a work phase once', () => {
+    const w = new Workout(phases(), 0);
+    w.tick(5000);
+    const signals = [9000, 10000, 10100, 11000].map((t) => w.tick(t).halfway);
+    assert.deepEqual(signals, [false, true, false, false]);
+    // rest phase (5s) gets no signal; the second work phase does
+    assert.equal(w.tick(17500).halfway, false);
+    assert.equal(w.tick(21000).halfway, false);
+    assert.equal(w.tick(25000).halfway, true);
+  });
+
+  it('skips the halfway signal for short work and after catching up', () => {
+    const short = new Workout(buildPhases(settings({ work: 5, rest: 0, rounds: 1, sets: 1 }), null), 0);
+    short.tick(5000);
+    assert.equal(short.tick(7600).halfway, false);
+    const w = new Workout(phases(), 0);
+    assert.equal(w.tick(11000).halfway, false);
+    assert.equal(w.tick(12000).halfway, false);
+  });
+
   it('pauses without losing time', () => {
     const w = new Workout(phases(), 0);
     w.tick(6000);
     w.pause(6000);
-    assert.deepEqual(w.tick(60000), { changed: false, countdown: false });
+    assert.deepEqual(w.tick(60000), { changed: false, countdown: false, halfway: false });
     assert.equal(w.remaining(60000), 9000);
     assert.equal(w.elapsed(60000), 6000);
     w.resume(60000);

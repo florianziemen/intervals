@@ -1,7 +1,7 @@
 // Intervals service worker: keeps the app usable offline.
 // Serves files from the cache first, then quietly fetches fresh copies,
 // so an update you upload appears on the next launch after it's fetched.
-const CACHE = 'intervals-v4';
+const CACHE = 'intervals-v5';
 const FILES = [
   './',
   './index.html',
