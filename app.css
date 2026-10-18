@@ -1,0 +1,572 @@
+:root {
+  --bg: #eef1f5;
+  --surface: #ffffff;
+  --ink: #151a22;
+  --muted: #5b6574;
+  --line: #d5dbe3;
+  --work: #2b3fe0;
+  --work-ink: #ffffff;
+  --rest: #f3e25a;
+  --rest-ink: #1d1c0e;
+  --prep: #151a22;
+  --prep-ink: #ffffff;
+  --empty: #dde2e9;
+  --danger: #c8321e;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #12161c;
+    --surface: #1b2028;
+    --ink: #e8ecf1;
+    --muted: #98a2b0;
+    --line: #2c333d;
+    --work: #4558f0;
+    --prep: #e8ecf1;
+    --prep-ink: #12161c;
+    --empty: #262c35;
+    --danger: #ff6b57;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #12161c;
+  --surface: #1b2028;
+  --ink: #e8ecf1;
+  --muted: #98a2b0;
+  --line: #2c333d;
+  --work: #4558f0;
+  --prep: #e8ecf1;
+  --prep-ink: #12161c;
+  --empty: #262c35;
+  --danger: #ff6b57;
+  color-scheme: dark;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+[hidden] {
+  display: none !important;
+}
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-tap-highlight-color: transparent;
+}
+main {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 20px 18px 48px;
+}
+h1 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 4px 0 18px;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+h1 .logo {
+  height: 44px;
+  width: auto;
+  flex: none;
+}
+h2 {
+  font-size: 1.25rem;
+  margin: 36px 0 12px;
+  letter-spacing: -0.01em;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+button:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--work);
+  outline-offset: 2px;
+}
+.muted {
+  color: var(--muted);
+}
+
+/* Start block: the one bold element */
+.start {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 28px;
+  background: var(--work);
+  color: var(--work-ink);
+  padding: 26px 24px 22px;
+  text-align: left;
+}
+.start .big {
+  display: block;
+  font-size: clamp(3rem, 16vw, 4.6rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.start .big.compact {
+  font-size: clamp(2.4rem, 12vw, 3.6rem);
+}
+.start .sub {
+  display: block;
+  margin-top: 10px;
+  font-size: 1rem;
+  opacity: 0.85;
+}
+.start:active {
+  transform: scale(0.99);
+}
+
+.settings {
+  margin-top: 14px;
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 6px 16px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+.row.dim {
+  opacity: 0.45;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stepper button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.stepper output {
+  min-width: 64px;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.presets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.92rem;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--work);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.stat {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat b {
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.stat span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.gridwrap {
+  margin-top: 14px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 12px;
+  overflow-x: auto;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+  min-width: 296px;
+}
+.dow {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.cell {
+  border: 0;
+  margin: 0;
+  background: var(--empty);
+  color: inherit;
+  font: inherit;
+  border-radius: 10px;
+  padding: 4px 0 5px;
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.cell .dn {
+  font-size: 0.68rem;
+  color: var(--muted);
+  line-height: 1;
+}
+.cell .em {
+  font-size: 1.4rem;
+  line-height: 1.15;
+}
+.cell .tm {
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  min-height: 1em;
+}
+.cell.on {
+  box-shadow: inset 0 0 0 2px var(--work);
+}
+.cell.future {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.cell.today {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+.cell.sel {
+  background: var(--work);
+  color: var(--work-ink);
+}
+.cell.sel .dn {
+  color: inherit;
+  opacity: 0.8;
+}
+.daydetail {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  min-height: 1.4em;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+ul.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border-radius: 16px;
+}
+ul.log li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+ul.log li:last-child {
+  border-bottom: 0;
+}
+ul.log .what {
+  font-weight: 600;
+}
+ul.log .when {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.del {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.88rem;
+  padding: 8px;
+  min-width: 44px;
+}
+.del.armed {
+  color: var(--danger);
+  font-weight: 700;
+}
+.empty {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 18px;
+  color: var(--muted);
+}
+
+details {
+  margin-top: 28px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 4px 16px;
+}
+summary {
+  padding: 12px 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+details p {
+  margin: 0 0 10px;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+textarea {
+  width: 100%;
+  min-height: 110px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  font:
+    13px/1.4 ui-monospace,
+    Menlo,
+    monospace;
+  padding: 10px;
+}
+.btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 14px;
+}
+.btn {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+}
+.msg {
+  font-size: 0.9rem;
+  min-height: 1.3em;
+  margin-bottom: 10px;
+}
+.privacy {
+  margin-top: 22px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* Exercise groups */
+.groups {
+  margin-top: 22px;
+}
+.groups-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.groups-head h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+.linkbtn {
+  border: 0;
+  background: transparent;
+  color: var(--work);
+  font-weight: 600;
+  padding: 8px 0 8px 10px;
+  font-size: 0.95rem;
+}
+.chip.sel {
+  background: var(--work);
+  color: var(--work-ink);
+  border-color: var(--work);
+}
+.gdesc {
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin-top: 10px;
+}
+.gdesc .linkbtn {
+  padding: 4px 0;
+}
+.editor {
+  margin-top: 12px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 12px 16px 4px;
+}
+.editor label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 8px 0 6px;
+}
+.editor input[type='text'] {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  padding: 10px;
+}
+#g-ex {
+  font: inherit;
+  font-size: 1rem;
+  min-height: 160px;
+}
+.btn.primary {
+  background: var(--work);
+  color: var(--work-ink);
+  border-color: var(--work);
+}
+.btn.danger {
+  color: var(--danger);
+}
+.btn.danger.armed {
+  font-weight: 700;
+}
+
+/* Timer overlay */
+.timer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 22px calc(env(safe-area-inset-bottom, 0px) + 22px);
+  background: var(--prep);
+  color: var(--prep-ink);
+  transition: background-color 0.25s;
+}
+.timer.work {
+  background: var(--work);
+  color: var(--work-ink);
+}
+.timer.rest {
+  background: var(--rest);
+  color: var(--rest-ink);
+}
+.t-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.t-mid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.t-phase {
+  font-size: clamp(2rem, 10vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+.t-count {
+  font-size: min(46vw, 38vh);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  margin: 6px 0 0 -0.04em;
+}
+.t-next {
+  font-size: 1.05rem;
+  opacity: 0.8;
+  margin-top: 10px;
+}
+.bar {
+  position: relative;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0.18;
+}
+.barfill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: currentColor;
+  width: 0;
+}
+.t-btns {
+  display: flex;
+  gap: 12px;
+}
+.t-btns button {
+  flex: 1;
+  border: 2px solid currentColor;
+  background: transparent;
+  border-radius: 18px;
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.timer.paused .t-count {
+  opacity: 0.45;
+}
+@media (prefers-reduced-motion: reduce) {
+  .timer {
+    transition: none;
+  }
+}
