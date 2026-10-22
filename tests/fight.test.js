@@ -1,0 +1,95 @@
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+
+import { MAX_LEVEL, TRAITS, fightLine, fightState } from '../js/fight.js';
+import { cheer, greeting, ZOMBIE_GREETINGS } from '../js/motivation.js';
+import { CALENDAR_WEEKS, addDays } from '../js/stats.js';
+
+const at = (y, m, d, h = 12) => new Date(y, m - 1, d, h);
+const session = (date) => ({
+  id: date.toISOString(),
+  at: date.toISOString(),
+  work: 30,
+  rest: 10,
+  rounds: 10,
+  planned: 10,
+});
+/** One session per day for n days from start. */
+const daily = (start, n) => Array.from({ length: n }, (_, i) => session(addDays(start, i)));
+const MON = at(2026, 9, 7); // a Monday
+
+describe('fight', () => {
+  it('has one trait per calendar week', () => {
+    assert.equal(MAX_LEVEL, CALENDAR_WEEKS);
+  });
+
+  it('starts empty-pawed', () => {
+    const s = fightState([], MON);
+    assert.deepEqual(s, { traits: [], zombie: false, last: null });
+    assert.match(fightLine(s), /empty-pawed/);
+  });
+
+  it('gains a trait for each full Monday-to-Sunday week', () => {
+    const sun = addDays(MON, 6);
+    assert.equal(fightState(daily(MON, 6), addDays(MON, 5)).traits.length, 0);
+    const s = fightState(daily(MON, 7), sun);
+    assert.deepEqual(s.traits, [TRAITS[0]]);
+    assert.equal(s.last?.kind, 'gain');
+    assert.match(fightLine(s), /Level 1 of 6/);
+    // Seven days that don't run Monday to Sunday earn nothing.
+    assert.equal(fightState(daily(addDays(MON, 1), 7), addDays(MON, 7)).traits.length, 0);
+  });
+
+  it('caps at the max level', () => {
+    const s = fightState(daily(MON, 7 * 8), addDays(MON, 7 * 8 - 1));
+    assert.equal(s.traits.length, MAX_LEVEL);
+    assert.match(fightLine(s), /Fully armed/);
+  });
+
+  it('loses the newest trait per missed day, but not for today', () => {
+    const log = daily(MON, 14); // two traits by the second Sunday
+    const monday3 = addDays(MON, 14);
+    assert.equal(fightState(log, monday3).traits.length, 2);
+    const s = fightState(log, addDays(MON, 15));
+    assert.deepEqual(s.traits, [TRAITS[0]]);
+    assert.deepEqual(s.last, { kind: 'loss', key: '2026-09-21', trait: TRAITS[1] });
+  });
+
+  it('turns into a zombie on a missed day with nothing to lose, and a workout cures', () => {
+    const log = daily(MON, 7); // one trait
+    const sun = addDays(MON, 6);
+    // Monday costs the trait; Tuesday is only today, so not missed yet.
+    let s = fightState(log, addDays(sun, 2));
+    assert.deepEqual([s.traits.length, s.zombie], [0, false]);
+    assert.match(fightLine(s), /one day without exercise/);
+    s = fightState(log, addDays(sun, 3));
+    assert.equal(s.zombie, true);
+    assert.deepEqual(s.last, { kind: 'zombie', key: '2026-09-15' });
+    assert.match(fightLine(s), /zombie/);
+    const cureDay = addDays(sun, 20);
+    s = fightState([...log, session(cureDay)], cureDay);
+    assert.equal(s.zombie, false);
+    assert.equal(s.last?.kind, 'cure');
+    // A missed day right after the cure turns him again.
+    assert.equal(fightState([...log, session(cureDay)], addDays(cureDay, 2)).zombie, true);
+  });
+
+  it('feeds the wallaby’s messages', () => {
+    const sun = addDays(MON, 6);
+    assert.match(cheer({ full: true }, daily(MON, 7), sun), /found a frying pan/);
+    // A second workout that Sunday gets a normal cheer.
+    const twice = [...daily(MON, 7), session(at(2026, 9, 13, 18))];
+    assert.doesNotMatch(cheer({ full: true }, twice, at(2026, 9, 13, 19)), /found/);
+
+    const zombieDay = addDays(MON, 30);
+    assert.ok(ZOMBIE_GREETINGS.includes(greeting([session(MON)], zombieDay)));
+    assert.match(cheer({ full: false }, [session(MON), session(zombieDay)], zombieDay), /cured/);
+
+    // Lost the bat yesterday (Monday after two full weeks): personal, last in its list.
+    const rolls = [0, 0.99];
+    assert.match(
+      greeting(daily(MON, 14), addDays(MON, 15), () => rolls.shift() ?? 0),
+      /dropped a cricket bat/,
+    );
+  });
+});
