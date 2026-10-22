@@ -160,7 +160,8 @@ Timer
   resuming moves `phaseEnd` forward, and `pausedTotal` keeps elapsed time right.
 - Signals: a beep and buzz when each phase starts, a short beep in each of
   the last 3 seconds, and a double beep halfway through work phases of
-  `HALFWAY_MIN` (8) seconds or more. On iOS, the silent switch mutes the
+  `HALFWAY_MIN` (8) seconds or more. Beeps are sine tones at full gain
+  (`VOLUME` in `js/feedback.js`), held, then faded over the last 50ms. On iOS, the silent switch mutes the
   beeps and vibration isn't supported.
 - The AudioContext is created on the start tap (iOS requires a gesture).
   The Screen Wake Lock is requested at start and again when the page
@@ -236,7 +237,12 @@ Before committing:
 3. `npm run lint` and `npm run format:check` (fetched via npx; not deployed
    dependencies).
 4. `npm run serve` and open http://localhost:8000. The service worker also
-   registers on localhost.
+   registers on localhost. The server listens on all interfaces, so a phone
+   on the same Wi-Fi can open `http://<computer's LAN IP>:8000` (on macOS:
+   `ipconfig getifaddr en0`). Over plain http on a LAN IP the service worker
+   and wake lock are unavailable (they need https or localhost); beeps,
+   vibration and storage still work. The firewall may need to allow
+   incoming connections to python3.
 5. Manual checks: start, pause, resume and end a workout. Run with
    sets > 1 and a break, with rest 0, and with a group selected. Confirm
    the session appears in the calendar and the list. Back up, clear

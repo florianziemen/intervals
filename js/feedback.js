@@ -1,6 +1,9 @@
 // Beeps (WebAudio), vibration and the screen wake lock. All of these are
 // optional browser features, so every call fails silently.
 
+/** Peak beep gain (1 = full scale). */
+const VOLUME = 1;
+
 /** @param {() => boolean} isEnabled  whether beeps and vibration are on */
 export function createFeedback(isEnabled) {
   /** @type {AudioContext|null} */
@@ -33,8 +36,11 @@ export function createFeedback(isEnabled) {
         osc.frequency.value = freq;
         osc.connect(gain);
         gain.connect(audio.destination);
+        // Full level, held for most of the beep, then a short fade to avoid a click.
         const t = audio.currentTime;
-        gain.gain.setValueAtTime(0.3, t);
+        const fade = Math.min(0.05, dur / 3);
+        gain.gain.setValueAtTime(VOLUME, t);
+        gain.gain.setValueAtTime(VOLUME, t + dur - fade);
         gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
         osc.start(t);
         osc.stop(t + dur);
