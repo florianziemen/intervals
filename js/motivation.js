@@ -1,6 +1,7 @@
 // What the wallaby says: a greeting on page entry and a cheer after a workout.
 
-import { dayKey, summary, totalsByDay } from './stats.js';
+import { fightState } from './fight.js';
+import { addDays, dayKey, summary, totalsByDay } from './stats.js';
 
 /** @typedef {() => number} Random  returns a number in [0, 1) */
 
@@ -26,6 +27,12 @@ export const GREETINGS = Object.freeze({
     'Every round makes the next one easier.',
   ],
 });
+
+export const ZOMBIE_GREETINGS = Object.freeze([
+  'Braaains… I mean, workout? A workout would cure me.',
+  'Uuurgh. Hop… hop… Please, one round and I’m a wallaby again.',
+  'Zombie Wally here. Squats are the only cure.',
+]);
 
 export const CHEERS = Object.freeze({
   full: [
@@ -72,6 +79,8 @@ function partOfDay(now) {
  */
 export function greeting(log, now, rand = Math.random) {
   if (!log.length) return 'G’day! I’m Wally. Let’s hop into your first workout.';
+  const fight = fightState(log, now);
+  if (fight.zombie) return pick(ZOMBIE_GREETINGS, rand);
   const { thisWeek, streak } = summary(log, now);
   const today = totalsByDay(log).get(dayKey(now));
   /** @type {string[]} */
@@ -80,6 +89,13 @@ export function greeting(log, now, rand = Math.random) {
   else if (streak && !thisWeek) personal.push(`New week! Keep your ${streak}-week streak hopping.`);
   if (streak >= 2) personal.push(`${streak} weeks in a row. You’re on a roll!`);
   if (thisWeek >= 3) personal.push(`${thisWeek} workouts this week already. Bouncy!`);
+  const { last } = fight;
+  if (last?.kind === 'loss' && last.key === dayKey(addDays(now, -1)) && last.trait) {
+    personal.push(`I dropped ${last.trait.name} yesterday. A full week wins it back!`);
+  }
+  if (!today && !fight.traits.length) {
+    personal.push('Zombies everywhere and I’ve got nothing. Hop to it today or I turn!');
+  }
   return choose(personal, [...GREETINGS[partOfDay(now)], ...GREETINGS.any], rand);
 }
 
@@ -92,8 +108,16 @@ export function greeting(log, now, rand = Math.random) {
  */
 export function cheer({ full }, log, now, rand = Math.random) {
   if (log.length === 1) return 'Your very first workout! This is how every streak starts.';
-  if (!full) return pick(CHEERS.partial, rand);
   const totals = totalsByDay(log);
+  const { last } = fightState(log, now);
+  // Only the day's first workout gains gear or cures, so only it gets the news.
+  if (last?.key === dayKey(now) && totals.get(last.key)?.count === 1) {
+    if (last.kind === 'cure') return 'You cured me! No more zombie. Thanks, mate.';
+    if (last.kind === 'gain' && last.trait) {
+      return `A whole week, every single day! I found ${last.trait.name} ${last.trait.emoji}`;
+    }
+  }
+  if (!full) return pick(CHEERS.partial, rand);
   const today = totals.get(dayKey(now))?.seconds ?? 0;
   const best = Math.max(...[...totals.values()].map((d) => d.seconds));
   const { thisWeek } = summary(log, now);

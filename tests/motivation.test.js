@@ -36,26 +36,27 @@ describe('motivation', () => {
     assert.match(greeting([], at(2026, 10, 14)), /first workout/);
   });
 
-  it('greets by time of day when nothing personal applies', () => {
-    const log = [session(at(2026, 9, 1))];
-    const msg = greeting(log, at(2026, 10, 14, 8), () => 0);
+  it('greets by time of day when a general message is picked', () => {
+    const log = [session(at(2026, 10, 13))];
+    const rolls = [0.99, 0]; // general, then the first one
+    const msg = greeting(log, at(2026, 10, 14, 8), () => rolls.shift() ?? 0);
     assert.equal(msg, GREETINGS.morning[0]);
     assert.equal(greeting(log, at(2026, 10, 14, 22), never), GREETINGS.any.at(-1));
   });
 
   it('mentions the streak and today', () => {
-    // Wednesday 2026-10-14; workouts in the two previous weeks, none this week.
-    const log = [session(at(2026, 10, 1)), session(at(2026, 10, 8))];
-    assert.match(greeting(log, at(2026, 10, 14), always), /2-week streak/);
-    const today = [...log, session(at(2026, 10, 14, 9))];
-    assert.match(greeting(today, at(2026, 10, 14), always), /today/);
-    assert.ok(general.includes(greeting(today, at(2026, 10, 14), never)));
+    // Monday 2026-10-12; workouts every day of the two previous weeks, none yet today.
+    const log = Array.from({ length: 14 }, (_, i) => session(at(2026, 9, 28 + i)));
+    assert.match(greeting(log, at(2026, 10, 12), always), /2-week streak/);
+    const today = [...log, session(at(2026, 10, 12, 9))];
+    assert.match(greeting(today, at(2026, 10, 12), always), /today/);
+    assert.ok(general.includes(greeting(today, at(2026, 10, 12), never)));
   });
 
   it('cheers a first, partial and full workout', () => {
     const now = at(2026, 10, 14);
     assert.match(cheer({ full: true }, [session(now)], now), /first workout/);
-    const log = [session(at(2026, 10, 1)), session(now)];
+    const log = [session(at(2026, 10, 13)), session(now)];
     assert.ok(CHEERS.partial.includes(cheer({ full: false }, log, now)));
     assert.ok(CHEERS.full.includes(cheer({ full: true }, log, now, never)));
   });
