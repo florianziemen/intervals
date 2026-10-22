@@ -195,10 +195,16 @@ Wallaby
   (`greeting()`); the × button hides it until the next load.
 - When a logged workout ends, Wally cheers on the finish screen (`cheer()`).
   Nothing is shown if no round was completed.
-- Messages come from fixed lists in `js/motivation.js`. When a personal
-  message applies (first workout, streak, today, biggest day, sessions this
-  week), it is picked 60% of the time; otherwise a general one (greetings
-  depend on morning/afternoon/evening).
+- Messages come from fixed sets in `js/motivation.js` (`GREETINGS`,
+  `CHEERS`, `PERSONAL_GREETINGS`, `PERSONAL_CHEERS`). Each situation has at
+  least 3 equivalent lines and one is picked at random; lines that need
+  numbers or gear are functions of a `Context`. All situations that apply,
+  including the general ones (time of day, any time), are drawn by their
+  weight in `WEIGHTS`, then a line within the chosen set. Important news
+  (no gear left, gear lost yesterday, streak at stake) is likely but not
+  certain; "it's evening" is rare when anything else applies. First
+  workout, zombie, cure and new gear always win outright. A test enforces at least 3 lines per set, no
+  duplicates and no straight apostrophes.
 
 Wally vs zombies (inspired by Zombicide)
 
@@ -211,7 +217,7 @@ Wally vs zombies (inspired by Zombicide)
   as missed. A missed day with nothing left to lose turns Wally into a
   zombie; the next day with exercise cures him (no gear).
 - Shown as gear slots and a status line in `#fight` under the calendar.
-  A zombie Wally is tinted (`.zombie img`), greets with `ZOMBIE_GREETINGS`,
+  A zombie Wally is tinted (`.zombie img`), greets with `GREETINGS.zombie`,
   and the day's first workout cheers a cure or a new item.
 
 PWA bits

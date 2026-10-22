@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import { MAX_LEVEL, TRAITS, fightLine, fightState } from '../js/fight.js';
-import { cheer, greeting, ZOMBIE_GREETINGS } from '../js/motivation.js';
+import { GREETINGS, PERSONAL_CHEERS, cheer, greeting } from '../js/motivation.js';
 import { CALENDAR_WEEKS, addDays } from '../js/stats.js';
 
 const at = (y, m, d, h = 12) => new Date(y, m - 1, d, h);
@@ -76,19 +76,20 @@ describe('fight', () => {
 
   it('feeds the wallaby’s messages', () => {
     const sun = addDays(MON, 6);
-    assert.match(cheer({ full: true }, daily(MON, 7), sun), /found a frying pan/);
+    assert.match(cheer({ full: true }, daily(MON, 7), sun), /a frying pan/);
     // A second workout that Sunday gets a normal cheer.
     const twice = [...daily(MON, 7), session(at(2026, 9, 13, 18))];
-    assert.doesNotMatch(cheer({ full: true }, twice, at(2026, 9, 13, 19)), /found/);
+    assert.doesNotMatch(cheer({ full: true }, twice, at(2026, 9, 13, 19)), /frying pan/);
 
     const zombieDay = addDays(MON, 30);
-    assert.ok(ZOMBIE_GREETINGS.includes(greeting([session(MON)], zombieDay)));
-    assert.match(cheer({ full: false }, [session(MON), session(zombieDay)], zombieDay), /cured/);
+    assert.ok(GREETINGS.zombie.includes(greeting([session(MON)], zombieDay)));
+    assert.ok(
+      PERSONAL_CHEERS.cure.includes(cheer({ full: false }, [session(MON), session(zombieDay)], zombieDay)),
+    );
 
-    // Lost the bat yesterday (Monday after two full weeks): personal, last in its list.
-    const rolls = [0, 0.99];
+    // Lost the bat yesterday (Monday after two full weeks), the most important news.
     assert.match(
-      greeting(daily(MON, 14), addDays(MON, 15), () => rolls.shift() ?? 0),
+      greeting(daily(MON, 14), addDays(MON, 15), () => 0),
       /dropped a cricket bat/,
     );
   });
