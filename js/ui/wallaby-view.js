@@ -1,5 +1,6 @@
 // The wallaby on the main page: greets the user when the page opens.
 
+import { fightState } from '../fight.js';
 import { greeting } from '../motivation.js';
 import { byId } from './dom.js';
 
@@ -9,6 +10,7 @@ import { byId } from './dom.js';
  */
 export function initWallabyView(store, now = () => new Date()) {
   const box = byId('wb-home');
+  box.classList.toggle('zombie', fightState(store.state.log, now()).zombie);
   byId('wb-home-text').textContent = greeting(store.state.log, now());
   byId('wb-close').addEventListener('click', () => {
     box.hidden = true;

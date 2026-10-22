@@ -4,6 +4,7 @@ import { createFeedback } from './feedback.js';
 import { createStorage } from './storage.js';
 import { createStore } from './store.js';
 import { initBackupView } from './ui/backup-view.js';
+import { initFightView } from './ui/fight-view.js';
 import { initGroupsView } from './ui/groups-view.js';
 import { initHistoryView } from './ui/history-view.js';
 import { initSettingsView } from './ui/settings-view.js';
@@ -17,6 +18,7 @@ initWallabyView(store);
 initSettingsView(store);
 initGroupsView(store);
 initHistoryView(store);
+initFightView(store);
 initTimerView(store, feedback);
 initBackupView(store);
 

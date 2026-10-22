@@ -36,12 +36,13 @@ js/groups.js            Exercise groups: validation, editor parsing, notes (pure
 js/log.js               Sessions, backup format, parse and merge (pure)
 js/stats.js             Day totals, week/streak/minutes, calendar, emoji tiers (pure)
 js/workout.js           Phase list builder and the Workout engine (pure, clock injected)
+js/fight.js             Wally vs zombies: gear earned and lost from the log (pure)
 js/motivation.js        Wallaby greeting and post-workout cheer messages (pure, rng injected)
 js/storage.js           JSON over Web Storage, all access guarded
 js/store.js             App state; the only module that reads/writes storage
 js/feedback.js          Beeps (WebAudio), vibration, screen wake lock
 js/ui/dom.js            byId, el (safe element builder), twoTap
-js/ui/*-view.js         One view per section: wallaby, settings, groups, history, timer, backup
+js/ui/*-view.js         One view per section: wallaby, settings, groups, history, fight, timer, backup
 tests/*.test.js         node:test unit tests
 sw.js                   Service worker: offline cache (cache first, refresh in background)
 manifest.webmanifest    PWA manifest: name, colors, icons, standalone display
@@ -67,7 +68,7 @@ ES modules do not load from `file://`. Always serve the folder over HTTP.
 ## Architecture
 
 - Pure logic modules (format, settings, groups, log, stats, workout,
-  motivation) have no DOM or storage access and are fully unit tested. Put
+  fight, motivation) have no DOM or storage access and are fully unit tested. Put
   new logic there.
 - `store.js` holds `{settings, groups, log}`, persists every change and
   notifies subscribers. Storage is injected (`createStore(createStorage())`),
@@ -194,10 +195,30 @@ Wallaby
   (`greeting()`); the × button hides it until the next load.
 - When a logged workout ends, Wally cheers on the finish screen (`cheer()`).
   Nothing is shown if no round was completed.
-- Messages come from fixed lists in `js/motivation.js`. When a personal
-  message applies (first workout, streak, today, biggest day, sessions this
-  week), it is picked 60% of the time; otherwise a general one (greetings
-  depend on morning/afternoon/evening).
+- Messages come from fixed sets in `js/motivation.js` (`GREETINGS`,
+  `CHEERS`, `PERSONAL_GREETINGS`, `PERSONAL_CHEERS`). Each situation has at
+  least 3 equivalent lines and one is picked at random; lines that need
+  numbers or gear are functions of a `Context`. All situations that apply,
+  including the general ones (time of day, any time), are drawn by their
+  weight in `WEIGHTS`, then a line within the chosen set. Important news
+  (no gear left, gear lost yesterday, streak at stake) is likely but not
+  certain; "it's evening" is rare when anything else applies. First
+  workout, zombie, cure and new gear always win outright. A test enforces at least 3 lines per set, no
+  duplicates and no straight apostrophes.
+
+Wally vs zombies (inspired by Zombicide)
+
+- `fightState(log, now)` replays the log day by day from the first workout.
+  Nothing is stored; it is derived from the log every time.
+- Each Monday-to-Sunday week with exercise every day earns the next item
+  of `TRAITS` (🍳 🏏 🥾 🪖 🪓 🛡️), granted on the Sunday. `MAX_LEVEL`
+  equals `CALENDAR_WEEKS`: fully armed means every displayed week was full.
+- Each past day without exercise costs the newest item. Today never counts
+  as missed. A missed day with nothing left to lose turns Wally into a
+  zombie; the next day with exercise cures him (no gear).
+- Shown as gear slots and a status line in `#fight` under the calendar.
+  A zombie Wally is tinted (`.zombie img`), greets with `GREETINGS.zombie`,
+  and the day's first workout cheers a cure or a new item.
 
 PWA bits
 
