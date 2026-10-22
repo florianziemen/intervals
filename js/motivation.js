@@ -1,44 +1,187 @@
 // What the wallaby says: a greeting on page entry and a cheer after a workout.
+// Every situation that applies has a set of equivalent lines and a weight
+// for how important it is. A situation is drawn by weight, then a line from
+// its set at random, so important news usually wins but not always.
 
-import { dayKey, summary, totalsByDay } from './stats.js';
+import { MAX_LEVEL, TRAITS, fightState } from './fight.js';
+import { addDays, dayKey, summary, totalsByDay } from './stats.js';
 
 /** @typedef {() => number} Random  returns a number in [0, 1) */
 
-/** Share of picks that use a message about the user's own log, when one applies. */
-const PERSONAL_SHARE = 0.6;
+/**
+ * @typedef {object} Context
+ * @property {number} streak    weeks in a row
+ * @property {number} thisWeek  sessions this week
+ * @property {import('./fight.js').Trait} [trait]  gained or lost
+ */
+
+/** @typedef {string | ((c: Context) => string)} Line */
+
+/**
+ * How likely each situation is picked when it applies, relative to the
+ * others. Getting gear back or staying human beats "it's evening".
+ */
+export const WEIGHTS = Object.freeze({
+  greeting: {
+    emptyPawed: 8, // no gear: today's workout decides if Wally turns
+    dropped: 6, // lost gear yesterday
+    newWeek: 5, // streak at stake
+    armed: 4,
+    streak: 3,
+    today: 3,
+    busyWeek: 3,
+    partOfDay: 2,
+    any: 1,
+  },
+  cheer: {
+    survived: 6, // kept a gearless Wally from turning
+    biggest: 5,
+    weekCount: 3,
+    full: 2,
+  },
+});
 
 export const GREETINGS = Object.freeze({
-  morning: ['Morning! Legs ready to hop?', 'Early bounce, best bounce.', 'Rise and hop!'],
+  first: [
+    'G’day! I’m Wally. Let’s hop into your first workout.',
+    'Hi, I’m Wally! Zombies are about. Let’s get fit before they find us.',
+    'New here? Me too, sort of. Let’s do our first workout together.',
+  ],
+  morning: [
+    'Morning! Legs ready to hop?',
+    'Early bounce, best bounce.',
+    'Rise and hop!',
+    'Zombies sleep in. We don’t.',
+    'Coffee can wait. Well, a few rounds can’t hurt first.',
+  ],
   afternoon: [
     'Perfect time for a quick hop.',
     'Shake off the afternoon slump!',
     'A few rounds now, a better evening later.',
+    'Lunch digested? Let’s move.',
+    'Afternoon patrol. Any zombies need outrunning?',
   ],
   evening: [
     'One short session before the couch?',
     'End the day on a bounce.',
     'Evening hops count double. Well, almost.',
+    'Zombies come out at night. Let’s be ready.',
+    'Still time today. A short one counts.',
   ],
   any: [
     'You don’t have to go fast. You just have to go.',
     'Small hops add up to big leaps.',
     'Strong tail, strong mind. Let’s go!',
     'Every round makes the next one easier.',
+    'The zombies are slow. Let’s keep it that way.',
+    'Fit wallabies don’t get eaten. Science.',
+    'Ten minutes. That’s all I’m asking.',
+    'Your future self says thanks in advance.',
+    'Hop first, think later.',
+    'Rule one of the apocalypse: cardio.',
+  ],
+  zombie: [
+    'Braaains… I mean, workout? A workout would cure me.',
+    'Uuurgh. Hop… hop… Please, one round and I’m a wallaby again.',
+    'Zombie Wally here. Squats are the only cure.',
+    'Mmmrgh. Can’t… feel… my tail. Exercise. Please.',
+    'I’ve gone a bit green. One workout and I’m back.',
+    'Grrr… burpees… The cure is burpees.',
+    'Don’t look at me like that. Just start the timer.',
+  ],
+});
+
+/** Greetings about the user's own log. @type {Readonly<Record<string, readonly Line[]>>} */
+export const PERSONAL_GREETINGS = Object.freeze({
+  today: [
+    'Back for more today? Legend.',
+    'Round two? You’re keen!',
+    'Again? The zombies are terrified of you.',
+  ],
+  newWeek: [
+    (c) => `New week! Keep your ${c.streak}-week streak hopping.`,
+    (c) => `Fresh week. Let’s make it ${c.streak + 1} in a row.`,
+    (c) => `A ${c.streak}-week streak is on the line. One workout keeps it.`,
+  ],
+  streak: [
+    (c) => `${c.streak} weeks in a row. You’re on a roll!`,
+    (c) => `${c.streak}-week streak. The zombies can’t keep up.`,
+    (c) => `${c.streak} weeks straight. That’s a habit now.`,
+  ],
+  busyWeek: [
+    (c) => `${c.thisWeek} workouts this week already. Bouncy!`,
+    (c) => `${c.thisWeek} this week. You’re flying.`,
+    (c) => `Workout number ${c.thisWeek + 1} this week? Let’s go.`,
+  ],
+  dropped: [
+    (c) => `I dropped ${c.trait?.name} yesterday. A full week wins it back!`,
+    (c) => `A zombie got ${c.trait?.name} ${c.trait?.emoji} yesterday. Let’s not lose more.`,
+    (c) => `Lost ${c.trait?.name} yesterday. Every day this week and it’s mine again.`,
+  ],
+  emptyPawed: [
+    'Zombies everywhere and I’ve got nothing. Hop to it today or I turn!',
+    'No gear, no defence. Today’s workout is all that keeps me human. Well, wallaby.',
+    'I can hear groaning outside. A workout today, please!',
+  ],
+  armed: [
+    'Fully kitted out! Let’s keep every piece.',
+    `${TRAITS.map((t) => t.emoji).join('')} Zombies, come at me.`,
+    'Top gear. Don’t let a lazy day take any of it.',
   ],
 });
 
 export const CHEERS = Object.freeze({
+  first: [
+    'Your very first workout! This is how every streak starts.',
+    'First one done! The zombies just got a bit nervous.',
+    'Workout number one. Many more to come!',
+  ],
   full: [
     'Bonzer! You crushed it.',
     'That’s a full workout. Proud of you!',
     'Hop hop hooray!',
     'Done and dusted. Have a drink of water.',
     'You showed up and finished. That’s the whole trick.',
+    'Zombies: 0. You: 1.',
+    'Every round, every second. Ripper!',
+    'That’s how wallabies stay off the menu.',
+    'Stretch, sip, smile. Great work.',
   ],
   partial: [
     'Every round counts. Nice work.',
     'Some is way more than none. Logged!',
     'Short hop today, still a hop.',
+    'Enough to keep the zombies guessing.',
+    'A bit is better than a zombie. Logged!',
+  ],
+});
+
+/** Cheers about the user's own log. @type {Readonly<Record<string, readonly Line[]>>} */
+export const PERSONAL_CHEERS = Object.freeze({
+  cure: [
+    'You cured me! No more zombie. Thanks, mate.',
+    'I’m back! My tail is brown again. Thank you!',
+    'Brains? No thanks. I’m a wallaby again!',
+  ],
+  gain: [
+    (c) => `A whole week, every single day! I found ${c.trait?.name} ${c.trait?.emoji}`,
+    (c) => `Seven days straight! Look what I found: ${c.trait?.name} ${c.trait?.emoji}`,
+    (c) => `Full week done. ${c.trait?.emoji} New gear: ${c.trait?.name}!`,
+  ],
+  biggest: [
+    'Your biggest day yet! Top roo.',
+    'Most exercise in a day so far. Champion!',
+    'New personal best day. Zombies, take note.',
+  ],
+  weekCount: [
+    (c) => `Workout ${c.thisWeek} this week. Keep hopping!`,
+    (c) => `That’s ${c.thisWeek} this week. Lovely stuff.`,
+    (c) => `Number ${c.thisWeek} this week. The zombies are giving up.`,
+  ],
+  survived: [
+    'Phew. That keeps the zombies off for another day.',
+    'Safe for today. Now let’s find some gear.',
+    'Still a wallaby! Thanks for that.',
   ],
 });
 
@@ -51,9 +194,25 @@ export function pick(list, rand) {
   return list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
 }
 
-/** @param {string[]} personal @param {readonly string[]} general @param {Random} rand */
-function choose(personal, general, rand) {
-  return personal.length && rand() < PERSONAL_SHARE ? pick(personal, rand) : pick(general, rand);
+/** @param {readonly Line[]} lines @param {Context} c @param {Random} rand */
+function say(lines, c, rand) {
+  const line = pick(lines, rand);
+  return typeof line === 'function' ? line(c) : line;
+}
+
+/**
+ * Draw one situation by weight, then one of its lines.
+ * @param {[number, readonly Line[]][]} options  [weight, lines], most important first
+ * @param {Context} c
+ * @param {Random} rand
+ */
+function choose(options, c, rand) {
+  let r = rand() * options.reduce((sum, [w]) => sum + w, 0);
+  for (const [w, lines] of options) {
+    if (r < w) return say(lines, c, rand);
+    r -= w;
+  }
+  return say(options[options.length - 1][1], c, rand);
 }
 
 /** @param {Date} now */
@@ -71,16 +230,28 @@ function partOfDay(now) {
  * @param {Random} [rand]
  */
 export function greeting(log, now, rand = Math.random) {
-  if (!log.length) return 'G’day! I’m Wally. Let’s hop into your first workout.';
+  if (!log.length) return pick(GREETINGS.first, rand);
+  const fight = fightState(log, now);
+  if (fight.zombie) return pick(GREETINGS.zombie, rand);
   const { thisWeek, streak } = summary(log, now);
   const today = totalsByDay(log).get(dayKey(now));
-  /** @type {string[]} */
-  const personal = [];
-  if (today) personal.push('Back for more today? Legend.');
-  else if (streak && !thisWeek) personal.push(`New week! Keep your ${streak}-week streak hopping.`);
-  if (streak >= 2) personal.push(`${streak} weeks in a row. You’re on a roll!`);
-  if (thisWeek >= 3) personal.push(`${thisWeek} workouts this week already. Bouncy!`);
-  return choose(personal, [...GREETINGS[partOfDay(now)], ...GREETINGS.any], rand);
+  const { last } = fight;
+  const dropped = last?.kind === 'loss' && last.key === dayKey(addDays(now, -1));
+  /** @type {Context} */
+  const c = { streak, thisWeek, trait: dropped ? last.trait : undefined };
+  const P = PERSONAL_GREETINGS;
+  const W = WEIGHTS.greeting;
+  /** @type {[number, readonly Line[]][]} */
+  const options = [];
+  if (!today && !fight.traits.length) options.push([W.emptyPawed, P.emptyPawed]);
+  if (c.trait) options.push([W.dropped, P.dropped]);
+  if (!today && streak && !thisWeek) options.push([W.newWeek, P.newWeek]);
+  if (fight.traits.length === MAX_LEVEL) options.push([W.armed, P.armed]);
+  if (today) options.push([W.today, P.today]);
+  if (streak >= 2) options.push([W.streak, P.streak]);
+  if (thisWeek >= 3) options.push([W.busyWeek, P.busyWeek]);
+  options.push([W.partOfDay, GREETINGS[partOfDay(now)]], [W.any, GREETINGS.any]);
+  return choose(options, c, rand);
 }
 
 /**
@@ -91,15 +262,29 @@ export function greeting(log, now, rand = Math.random) {
  * @param {Random} [rand]
  */
 export function cheer({ full }, log, now, rand = Math.random) {
-  if (log.length === 1) return 'Your very first workout! This is how every streak starts.';
-  if (!full) return pick(CHEERS.partial, rand);
+  if (log.length === 1) return pick(CHEERS.first, rand);
   const totals = totalsByDay(log);
+  const fight = fightState(log, now);
+  const { last } = fight;
+  const { thisWeek, streak } = summary(log, now);
+  /** @type {Context} */
+  const c = { streak, thisWeek, trait: last?.trait };
+  const P = PERSONAL_CHEERS;
+  // Only the day's first workout gains gear or cures, so only it gets the news.
+  const firstToday = totals.get(dayKey(now))?.count === 1;
+  if (firstToday && last?.key === dayKey(now)) {
+    if (last.kind === 'cure') return say(P.cure, c, rand);
+    if (last.kind === 'gain') return say(P.gain, c, rand);
+  }
+  if (!full) return pick(CHEERS.partial, rand);
   const today = totals.get(dayKey(now))?.seconds ?? 0;
   const best = Math.max(...[...totals.values()].map((d) => d.seconds));
-  const { thisWeek } = summary(log, now);
-  /** @type {string[]} */
-  const personal = [];
-  if (today >= best && totals.size > 1) personal.push('Your biggest day yet! Top roo.');
-  if (thisWeek >= 2) personal.push(`Workout ${thisWeek} this week. Keep hopping!`);
-  return choose(personal, CHEERS.full, rand);
+  const W = WEIGHTS.cheer;
+  /** @type {[number, readonly Line[]][]} */
+  const options = [];
+  if (firstToday && !fight.traits.length) options.push([W.survived, P.survived]);
+  if (today >= best && totals.size > 1) options.push([W.biggest, P.biggest]);
+  if (thisWeek >= 2) options.push([W.weekCount, P.weekCount]);
+  options.push([W.full, CHEERS.full]);
+  return choose(options, c, rand);
 }
