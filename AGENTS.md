@@ -165,6 +165,10 @@ Timer
   (`VOLUME` in `js/feedback.js`), held, then faded over the last 50ms. On iOS, the silent switch mutes the
   beeps and vibration isn't supported.
 - The AudioContext is created on the start tap (iOS requires a gesture).
+  The audio session is set to `ambient` (Safari) so music from other apps
+  keeps playing. iOS can silently break the context after the app was in
+  the background or another app took the audio, so it is resumed when the
+  page becomes visible, and any tap on the timer screen replaces it.
   The Screen Wake Lock is requested at start and again when the page
   becomes visible.
 - Settings and group are captured at start; the session is logged when

@@ -153,7 +153,13 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
   byId('startBtn').addEventListener('click', start);
   mainBtn.addEventListener('click', () => (workout ? togglePause() : close()));
   twoTap(endBtn, 'Tap to end', () => finish(false));
+  // Any tap on the timer screen restores audio that iOS dropped.
+  for (const type of ['touchend', 'click']) {
+    overlay.addEventListener(type, () => workout && feedback.unlockAudio());
+  }
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && workout) feedback.keepAwake();
+    const visible = document.visibilityState === 'visible';
+    feedback.pageVisible(visible);
+    if (visible && workout) feedback.keepAwake();
   });
 }
