@@ -697,6 +697,7 @@ textarea {
 .timer .wallaby img {
   width: min(28vw, 120px);
 }
+.timer.talk .t-count,
 .timer.done .t-count {
   font-size: min(30vw, 22vh);
 }

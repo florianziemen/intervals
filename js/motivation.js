@@ -1,4 +1,5 @@
-// What the wallaby says: a greeting on page entry and a cheer after a workout.
+// What the wallaby says: a greeting on page entry, a pep talk at the start
+// of a workout and in some breaks, and a cheer after a workout.
 // Every situation that applies has a set of equivalent lines and a weight
 // for how important it is. A situation is drawn by weight, then a line from
 // its set at random, so important news usually wins but not always.
@@ -184,6 +185,85 @@ export const PERSONAL_CHEERS = Object.freeze({
     'Still a wallaby! Thanks for that.',
   ],
 });
+
+/** Lines during a workout. Short, so they can be read in a few seconds. */
+export const PEP_TALKS = Object.freeze({
+  start: [
+    'Here we go! Hop to it.',
+    'Deep breath. You’ve got this.',
+    'Let’s show those zombies what we’re made of.',
+    'Nice and steady to start. Then we bounce.',
+    'Timer’s running. No turning back now!',
+  ],
+  rest: [
+    'Breathe. You’re doing great.',
+    'Shake it out. Next one’s coming.',
+    'Rest well, hop better.',
+    'Sip of water if you need it.',
+    'Looking strong! The zombies are nervous.',
+    'Loose shoulders, big breath.',
+    'In through the nose, out through the mouth.',
+    'Every rest earns the next round.',
+    'You’re faster than any zombie. Promise.',
+    'Rest is part of the plan. Enjoy it.',
+    'Wiggle your toes. Roll your neck. Ready soon.',
+    'That last one looked good from here.',
+    'Hearts pumping? That’s the idea.',
+    'Tail up, chin up.',
+    'Halfway there? Doesn’t matter. Just the next one.',
+    'Hydrate, mate.',
+    'The couch can wait. You’re on a roll.',
+    'Little breather. Big effort next.',
+    'I’m keeping watch. You just recover.',
+    'Sweat is just weakness hopping out.',
+    'Relax your hands. Unclench that jaw.',
+    'Proud of you. Keep going.',
+    'Zombie count: zero. Good job.',
+    'Feel that? That’s you getting stronger.',
+    'Don’t sit down. Keep the legs moving.',
+    'Easy breaths. You’re nearly ready again.',
+  ],
+  setBreak: [
+    'Set done! Catch your breath.',
+    'One set down. Walk it off.',
+    'Nice set! Rest up for the next one.',
+  ],
+  lastSet: [
+    'Last set coming. Leave it all here!',
+    'One more set and we’re done. Let’s finish strong.',
+    'Final set next. You’ve come this far!',
+  ],
+  lastRound: [
+    'Last round! Give it everything.',
+    'One more! Make it your best.',
+    'Final round. Hop like the zombies are right behind you.',
+  ],
+});
+
+/** Share of ordinary rests that get a pep talk, so it stays a surprise. */
+export const REST_TALK_CHANCE = 0.3;
+/** Rests shorter than this (seconds) pass too quickly to read a line. */
+export const TALK_MIN_SECONDS = 10;
+
+/**
+ * Pep talk for a phase that just started, or null to stay quiet: always at
+ * the start, between sets and before the last round, sometimes in a rest.
+ * @param {import('./workout.js').Phase} phase
+ * @param {{rounds: number, sets: number}} plan
+ * @param {Random} [rand]
+ * @returns {string|null}
+ */
+export function pepTalk(phase, plan, rand = Math.random) {
+  const T = PEP_TALKS;
+  if (phase.type === 'prep') return pick(T.start, rand);
+  if (phase.type !== 'break' && phase.type !== 'rest') return null;
+  if (phase.dur < TALK_MIN_SECONDS) return null;
+  if (phase.round >= plan.rounds) {
+    return pick(phase.set + 1 === plan.sets ? T.lastSet : T.setBreak, rand);
+  }
+  if (phase.set === plan.sets && phase.round + 1 === plan.rounds) return pick(T.lastRound, rand);
+  return rand() < REST_TALK_CHANCE ? pick(T.rest, rand) : null;
+}
 
 /**
  * @template T

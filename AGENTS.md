@@ -197,10 +197,15 @@ Wallaby
 
 - On page load, Wally greets the user above the start button
   (`greeting()`); the × button hides it until the next load.
+- During a workout, Wally gives a pep talk on the timer screen
+  (`pepTalk()`, lines in `PEP_TALKS`): always in the get-ready phase,
+  between sets and in the rest before the last round, and in
+  `REST_TALK_CHANCE` (30%) of other rests. Rests and breaks shorter than
+  `TALK_MIN_SECONDS` (10) get nothing. He hides when work starts.
 - When a logged workout ends, Wally cheers on the finish screen (`cheer()`).
   Nothing is shown if no round was completed.
 - Messages come from fixed sets in `js/motivation.js` (`GREETINGS`,
-  `CHEERS`, `PERSONAL_GREETINGS`, `PERSONAL_CHEERS`). Each situation has at
+  `CHEERS`, `PERSONAL_GREETINGS`, `PERSONAL_CHEERS`, `PEP_TALKS`). Each situation has at
   least 3 equivalent lines and one is picked at random; lines that need
   numbers or gear are functions of a `Context`. All situations that apply,
   including the general ones (time of day, any time), are drawn by their
