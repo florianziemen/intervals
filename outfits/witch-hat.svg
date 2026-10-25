@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 296" width="220" height="296">
+  <!-- Halloween: witch hat, and a pumpkin by the feet. Same coordinates as wallaby.svg. -->
+  <g stroke="#2E2219" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <ellipse cx="110" cy="62" rx="32" ry="7" fill="#5A3E7A" />
+    <path d="M94 62 C98 46 104 30 108 16 C112 9 122 7 130 12 C120 15 117 23 118 31 C120 41 124 52 126 62 Z" fill="#5A3E7A" />
+    <path d="M96 54 Q110 58 124 54 L125 60 Q110 64 95 60 Z" fill="#F28C28" />
+    <path d="M24 266 L26 258" stroke-width="4" />
+    <ellipse cx="24" cy="279" rx="17" ry="13" fill="#F28C28" />
+    <path d="M24 266 C18 272 18 286 24 292 C30 286 30 272 24 266" fill="none" />
+  </g>
+</svg>

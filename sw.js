@@ -1,7 +1,7 @@
 // Wally service worker: keeps the app usable offline.
 // Serves files from the cache first, then quietly fetches fresh copies,
 // so an update you upload appears on the next launch after it's fetched.
-const CACHE = 'wally-v2';
+const CACHE = 'wally-v3';
 const FILES = [
   './',
   './index.html',
@@ -13,6 +13,7 @@ const FILES = [
   './js/groups.js',
   './js/log.js',
   './js/motivation.js',
+  './js/seasons.js',
   './js/settings.js',
   './js/stats.js',
   './js/storage.js',
@@ -33,6 +34,13 @@ const FILES = [
   './apple-touch-icon.png',
   './wallaby.svg',
   './zombie.svg',
+  './outfits/cricket.svg',
+  './outfits/easter-eggs.svg',
+  './outfits/helmet.svg',
+  './outfits/party-hat.svg',
+  './outfits/rainbow.svg',
+  './outfits/santa-hat.svg',
+  './outfits/witch-hat.svg',
 ];
 
 self.addEventListener('install', (event) => {

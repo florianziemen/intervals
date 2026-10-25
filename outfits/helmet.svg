@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 296" width="220" height="296">
+  <!-- Magpie season: bike helmet with cable ties against swooping. Same coordinates as wallaby.svg. -->
+  <g stroke="#2E2219" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M98 42 L92 24 M105 38 L102 19 M115 38 L118 19 M122 42 L128 24" stroke-width="2.5" />
+    <path d="M90 64 C90 46 99 37 110 37 C121 37 130 46 130 64 Z" fill="#2F80ED" />
+    <path d="M102 44 L100 56 M110 42 L110 56 M118 44 L120 56" stroke="#FFFFFF" stroke-width="3" />
+  </g>
+</svg>

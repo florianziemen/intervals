@@ -2,6 +2,7 @@
 
 import { fightState } from '../fight.js';
 import { greeting } from '../motivation.js';
+import { activeSeason } from '../seasons.js';
 import { byId, showWally } from './dom.js';
 
 /**
@@ -10,7 +11,7 @@ import { byId, showWally } from './dom.js';
  */
 export function initWallabyView(store, now = () => new Date()) {
   const box = byId('wb-home');
-  showWally(box, fightState(store.state.log, now()).zombie);
+  showWally(box, fightState(store.state.log, now()).zombie, activeSeason(now())?.outfit);
   byId('wb-home-text').textContent = greeting(store.state.log, now());
   byId('wb-close').addEventListener('click', () => {
     box.hidden = true;

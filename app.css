@@ -317,10 +317,8 @@ textarea:focus-visible {
   border-radius: 16px;
   padding: 12px 14px;
 }
-.fight img {
-  flex: none;
+.fight .wb-fig {
   width: 56px;
-  height: auto;
 }
 .fight p {
   margin: 8px 0 0;
@@ -448,11 +446,29 @@ textarea {
   gap: 12px;
   margin: 0 0 18px;
 }
-.wallaby img {
-  flex: none;
+.wallaby .wb-fig {
   width: 76px;
-  height: auto;
   animation: hop 0.9s ease-out both;
+}
+/* Wally with a seasonal outfit drawn over him (outfits/, same coordinates) */
+.wb-fig {
+  position: relative;
+  flex: none;
+}
+.wb-fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.wb-fig .outfit {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* zombie.svg is wallaby.svg mirrored and 244 wide instead of 220 */
+.zombie .wb-fig .outfit {
+  width: calc(100% * 220 / 244);
+  transform: scaleX(-1);
 }
 .bubble {
   position: relative;
@@ -689,7 +705,7 @@ textarea {
 .timer .wallaby {
   margin: 22px 0 0;
 }
-.timer .wallaby img {
+.timer .wallaby .wb-fig {
   width: min(28vw, 120px);
 }
 .timer.talk .t-count,
@@ -703,7 +719,7 @@ textarea {
   .timer {
     transition: none;
   }
-  .wallaby img,
+  .wallaby .wb-fig,
   .bubble {
     animation: none;
   }

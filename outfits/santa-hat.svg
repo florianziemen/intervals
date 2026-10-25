@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 296" width="220" height="296">
+  <!-- Christmas: Santa hat flopping to one side. Same coordinates as wallaby.svg. -->
+  <g stroke="#2E2219" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <path
+      d="M94 60 C96 40 104 24 116 20 C128 17 136 26 138 38 L130 40 C126 33 121 31 117 33 C121 41 124 51 126 60 Z"
+      fill="#D7263D"
+    />
+    <rect x="88" y="55" width="44" height="12" rx="6" fill="#FFFFFF" />
+    <circle cx="136" cy="42" r="7" fill="#FFFFFF" />
+  </g>
+</svg>

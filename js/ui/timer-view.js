@@ -4,8 +4,9 @@ import { clock } from '../format.js';
 import { newId } from '../groups.js';
 import { createSession } from '../log.js';
 import { cheer, pepTalk } from '../motivation.js';
+import { activeSeason } from '../seasons.js';
 import { Workout, buildPhases, nextLine, phaseTitle, progressLine } from '../workout.js';
-import { byId, twoTap } from './dom.js';
+import { byId, showWally, twoTap } from './dom.js';
 
 const TICK_MS = 100;
 
@@ -54,6 +55,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
     plan = store.state.settings;
     group = store.currentGroup();
     workout = new Workout(buildPhases(plan, group), now());
+    showWally(wallaby, false, activeSeason(new Date())?.outfit);
     mainBtn.textContent = 'Pause';
     endBtn.hidden = false;
     talk(pepTalk(workout.phase, plan));

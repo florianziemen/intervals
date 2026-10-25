@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 296" width="220" height="296">
+  <!-- Pride and Mardi Gras: rainbow sash across the body. Same coordinates as wallaby.svg. -->
+  <defs>
+    <clipPath id="body">
+      <path d="M110 124 C142 124 160 164 160 210 C160 250 140 270 110 270 C80 270 60 250 60 210 C60 164 78 124 110 124 Z" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#body)">
+    <g transform="rotate(42 110 196)">
+      <rect x="40" y="181" width="140" height="5" fill="#E40303" />
+      <rect x="40" y="186" width="140" height="5" fill="#FF8C00" />
+      <rect x="40" y="191" width="140" height="5" fill="#FFED00" />
+      <rect x="40" y="196" width="140" height="5" fill="#008026" />
+      <rect x="40" y="201" width="140" height="5" fill="#24408E" />
+      <rect x="40" y="206" width="140" height="5" fill="#732982" />
+      <path d="M40 181 L180 181 M40 211 L180 211" stroke="#2E2219" stroke-width="3" />
+    </g>
+  </g>
+</svg>
