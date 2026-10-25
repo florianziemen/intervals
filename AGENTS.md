@@ -165,6 +165,10 @@ Timer
   (`VOLUME` in `js/feedback.js`), held, then faded over the last 50ms. On iOS, the silent switch mutes the
   beeps and vibration isn't supported.
 - The AudioContext is created on the start tap (iOS requires a gesture).
+  The audio session is set to `ambient` (Safari) so music from other apps
+  keeps playing. iOS can silently break the context after the app was in
+  the background or another app took the audio, so it is resumed when the
+  page becomes visible, and any tap on the timer screen replaces it.
   The Screen Wake Lock is requested at start and again when the page
   becomes visible.
 - Settings and group are captured at start; the session is logged when
@@ -193,10 +197,15 @@ Wallaby
 
 - On page load, Wally greets the user above the start button
   (`greeting()`); the × button hides it until the next load.
+- During a workout, Wally gives a pep talk on the timer screen
+  (`pepTalk()`, lines in `PEP_TALKS`): always in the get-ready phase,
+  between sets and in the rest before the last round, and in
+  `REST_TALK_CHANCE` (30%) of other rests. Rests and breaks shorter than
+  `TALK_MIN_SECONDS` (10) get nothing. He hides when work starts.
 - When a logged workout ends, Wally cheers on the finish screen (`cheer()`).
   Nothing is shown if no round was completed.
 - Messages come from fixed sets in `js/motivation.js` (`GREETINGS`,
-  `CHEERS`, `PERSONAL_GREETINGS`, `PERSONAL_CHEERS`). Each situation has at
+  `CHEERS`, `PERSONAL_GREETINGS`, `PERSONAL_CHEERS`, `PEP_TALKS`). Each situation has at
   least 3 equivalent lines and one is picked at random; lines that need
   numbers or gear are functions of a `Context`. All situations that apply,
   including the general ones (time of day, any time), are drawn by their

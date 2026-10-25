@@ -91,7 +91,7 @@ export function fightLine(state) {
   if (level === MAX_LEVEL) {
     return `Fully armed after ${CALENDAR_WEEKS} weeks! Every day without exercise costs one piece of gear.`;
   }
-  const next = `Exercise every day from Monday to Sunday to find ${TRAITS[level].name}.`;
+  const next = `Exercise every day from Monday to Sunday to find new gear.`;
   if (level) return `Level ${level} of ${MAX_LEVEL}. ${next}`;
   return `Wally is empty-pawed: one day without exercise and he turns. ${next}`;
 }

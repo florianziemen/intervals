@@ -6,10 +6,14 @@ import {
   CHEERS,
   GREETINGS,
   PERSONAL_CHEERS,
+  PEP_TALKS,
   PERSONAL_GREETINGS,
+  REST_TALK_CHANCE,
+  TALK_MIN_SECONDS,
   WEIGHTS,
   cheer,
   greeting,
+  pepTalk,
   pick,
 } from '../js/motivation.js';
 
@@ -80,7 +84,7 @@ describe('motivation', () => {
 
   it('has several lines for every situation, all filled in', () => {
     const c = { streak: 3, thisWeek: 4, trait: TRAITS[1] };
-    for (const sets of [GREETINGS, PERSONAL_GREETINGS, CHEERS, PERSONAL_CHEERS]) {
+    for (const sets of [GREETINGS, PERSONAL_GREETINGS, CHEERS, PERSONAL_CHEERS, PEP_TALKS]) {
       for (const [name, lines] of Object.entries(sets)) {
         assert.ok(lines.length >= 3, `${name} has fewer than 3 lines`);
         assert.equal(new Set(lines).size, lines.length, `${name} has duplicates`);
@@ -119,5 +123,37 @@ describe('motivation', () => {
       seen.add(greeting(log, now, () => rolls.shift() ?? 0));
     }
     assert.equal(seen.size, GREETINGS.any.length);
+  });
+
+  describe('pep talks', () => {
+    const plan = { rounds: 4, sets: 3 };
+    const rest = (set, round, dur = 15) => ({ type: 'rest', dur, set, round });
+    const brk = (set) => ({ type: 'break', dur: 60, set, round: 4 });
+
+    it('always talks at the start, between sets and before the last round', () => {
+      assert.equal(pepTalk({ type: 'prep', dur: 5, set: 1, round: 0 }, plan, never), PEP_TALKS.start.at(-1));
+      assert.ok(PEP_TALKS.setBreak.includes(pepTalk(brk(1), plan, never)));
+      assert.ok(PEP_TALKS.lastSet.includes(pepTalk(brk(2), plan, never)));
+      // With setRest 0 the end of a set is a normal rest.
+      assert.ok(PEP_TALKS.setBreak.includes(pepTalk(rest(1, 4), plan, never)));
+      assert.ok(PEP_TALKS.lastRound.includes(pepTalk(rest(3, 3), plan, never)));
+    });
+
+    it('talks in some ordinary rests only', () => {
+      const below = () => REST_TALK_CHANCE - 0.01;
+      assert.ok(PEP_TALKS.rest.includes(pepTalk(rest(1, 1), plan, below)));
+      assert.equal(
+        pepTalk(rest(1, 1), plan, () => REST_TALK_CHANCE),
+        null,
+      );
+      // The last round of an earlier set is not the last round of the workout.
+      assert.equal(pepTalk(rest(1, 3), plan, never), null);
+    });
+
+    it('stays quiet during work and in rests too short to read', () => {
+      assert.equal(pepTalk({ type: 'work', dur: 30, set: 1, round: 1 }, plan, always), null);
+      assert.equal(pepTalk(rest(3, 3, TALK_MIN_SECONDS - 1), plan, always), null);
+      assert.equal(pepTalk({ ...brk(2), dur: 5 }, plan, always), null);
+    });
   });
 });

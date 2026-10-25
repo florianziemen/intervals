@@ -3,7 +3,7 @@
 import { clock } from '../format.js';
 import { newId } from '../groups.js';
 import { createSession } from '../log.js';
-import { cheer } from '../motivation.js';
+import { cheer, pepTalk } from '../motivation.js';
 import { Workout, buildPhases, nextLine, phaseTitle, progressLine } from '../workout.js';
 import { byId, twoTap } from './dom.js';
 
@@ -39,8 +39,14 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
 
   /** @param {string} type */
   function setMode(type) {
-    overlay.className = `timer ${type}`;
+    overlay.className = `timer ${type}` + (wallaby.hidden ? '' : ' talk');
     overlay.hidden = false;
+  }
+
+  /** Show Wally with a line, or hide him for null. @param {string|null} text */
+  function talk(text) {
+    wallaby.hidden = !text;
+    wallabyText.textContent = text ?? '';
   }
 
   function start() {
@@ -50,7 +56,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
     workout = new Workout(buildPhases(plan, group), now());
     mainBtn.textContent = 'Pause';
     endBtn.hidden = false;
-    wallaby.hidden = true;
+    talk(pepTalk(workout.phase, plan));
     setMode('prep');
     feedback.keepAwake();
     feedback.beep(660, 0.15);
@@ -67,6 +73,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
     }
     const work = workout.phase.type === 'work';
     if (changed) {
+      if (plan) talk(pepTalk(workout.phase, plan));
       feedback.beep(work ? 880 : 520, 0.45);
       feedback.buzz(work ? [200, 80, 200] : 300);
     } else if (countdown) {
@@ -114,6 +121,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
     if (!workout || !plan) return;
     const completed = workout.completed;
     workout = null;
+    talk(null);
 
     setMode('prep');
     bar.style.width = '100%';
@@ -133,8 +141,7 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
     const session = createSession({ settings: plan, group, completed, at, id: newId() });
     const saved = store.addSession(session);
     setMode('prep done');
-    wallabyText.textContent = cheer({ full }, store.state.log, at);
-    wallaby.hidden = false;
+    talk(cheer({ full }, store.state.log, at));
     phaseEl.textContent = full ? 'Done' : 'Ended';
     nextEl.textContent =
       `${completed === 1 ? 'round' : 'rounds'} logged` +
@@ -153,7 +160,13 @@ export function initTimerView(store, feedback, now = () => performance.now()) {
   byId('startBtn').addEventListener('click', start);
   mainBtn.addEventListener('click', () => (workout ? togglePause() : close()));
   twoTap(endBtn, 'Tap to end', () => finish(false));
+  // Any tap on the timer screen restores audio that iOS dropped.
+  for (const type of ['touchend', 'click']) {
+    overlay.addEventListener(type, () => workout && feedback.unlockAudio());
+  }
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && workout) feedback.keepAwake();
+    const visible = document.visibilityState === 'visible';
+    feedback.pageVisible(visible);
+    if (visible && workout) feedback.keepAwake();
   });
 }
