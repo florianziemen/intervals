@@ -58,3 +58,15 @@ export function twoTap(button, armedText, onConfirm) {
   });
   return disarm;
 }
+
+/**
+ * Shows Wally, or zombie Wally, in the box's image.
+ * @param {HTMLElement} box  element holding the wallaby <img>
+ * @param {boolean} zombie
+ */
+export function showWally(box, zombie) {
+  box.classList.toggle('zombie', zombie);
+  const img = /** @type {HTMLImageElement} */ (box.querySelector('img'));
+  img.src = zombie ? 'zombie.svg' : 'wallaby.svg';
+  img.width = zombie ? 244 : 220;
+}

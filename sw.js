@@ -1,7 +1,7 @@
-// Intervals service worker: keeps the app usable offline.
+// Wally service worker: keeps the app usable offline.
 // Serves files from the cache first, then quietly fetches fresh copies,
 // so an update you upload appears on the next launch after it's fetched.
-const CACHE = 'intervals-v8';
+const CACHE = 'wally-v1';
 const FILES = [
   './',
   './index.html',
@@ -32,6 +32,7 @@ const FILES = [
   './icon-maskable-512.png',
   './apple-touch-icon.png',
   './wallaby.svg',
+  './zombie.svg',
 ];
 
 self.addEventListener('install', (event) => {

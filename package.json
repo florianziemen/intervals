@@ -1,5 +1,5 @@
 {
-  "name": "intervals",
+  "name": "wally",
   "private": true,
   "description": "HIIT interval timer with an on-device workout log. No dependencies, no build step.",
   "license": "MIT",

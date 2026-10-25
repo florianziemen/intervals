@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 0 244 296" width="244" height="296">
+  <!-- Zombie Wally: wallaby.svg in zombie colors, arms reaching to the right -->
+  <g transform="translate(196 0) scale(-1 1)">
+  <g stroke="#2E2219" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <!-- tail -->
+    <path d="M146 246 C182 250 206 268 214 290 C188 292 158 282 136 266 Z" fill="#8FA874" />
+    <!-- body and belly -->
+    <path
+      d="M110 124 C142 124 160 164 160 210 C160 250 140 270 110 270 C80 270 60 250 60 210 C60 164 78 124 110 124 Z"
+      fill="#8FA874"
+    />
+    <ellipse cx="110" cy="214" rx="30" ry="42" fill="#C9D4AE" />
+    <!-- haunches -->
+    <ellipse cx="74" cy="244" rx="22" ry="26" fill="#8FA874" />
+    <ellipse cx="146" cy="244" rx="22" ry="26" fill="#8FA874" />
+    <!-- feet -->
+    <path d="M44 272 C52 260 90 260 102 272 C98 282 50 282 44 272 Z" fill="#8FA874" />
+    <path d="M118 272 C130 260 168 260 176 272 C170 282 122 282 118 272 Z" fill="#8FA874" />
+  </g>
+  <!-- head: the logo artwork, scaled down -->
+  <defs>
+    <clipPath id="hc">
+      <path
+        d="M256 184 C332 184 376 224 374 282 C372 332 330 362 314 402 C302 430 282 440 256 440 C230 440 210 430 198 402 C182 362 140 332 138 282 C136 224 180 184 256 184 Z"
+      />
+    </clipPath>
+    <clipPath id="ec0"><path d="M200 220 C150 176 120 92 140 34 C196 56 246 136 256 200 Z" /></clipPath>
+    <clipPath id="ec1"><path d="M312 220 C362 176 392 92 372 34 C316 56 266 136 256 200 Z" /></clipPath>
+  </defs>
+  <g
+    transform="translate(28 -4) scale(0.32)"
+    stroke="#2E2219"
+    stroke-width="11"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  >
+    <path d="M200 220 C150 176 120 92 140 34 C196 56 246 136 256 200 Z" fill="#8FA874" />
+    <path d="M210 200 C178 166 156 104 160 64 C192 88 224 142 236 192 Z" fill="#B5C394" stroke="none" />
+    <path d="M120 20 L130 86 Q170 92 214 66 L200 20 Z" fill="#4B5A38" stroke="none" clip-path="url(#ec0)" />
+    <path d="M200 220 C150 176 120 92 140 34 C196 56 246 136 256 200 Z" fill="none" />
+    <path d="M312 220 C362 176 392 92 372 34 C316 56 266 136 256 200 Z" fill="#8FA874" />
+    <path d="M302 200 C334 166 356 104 352 64 C320 88 288 142 276 192 Z" fill="#B5C394" stroke="none" />
+    <path d="M392 20 L382 86 Q342 92 298 66 L312 20 Z" fill="#4B5A38" stroke="none" clip-path="url(#ec1)" />
+    <path d="M312 220 C362 176 392 92 372 34 C316 56 266 136 256 200 Z" fill="none" />
+    <path
+      d="M256 184 C332 184 376 224 374 282 C372 332 330 362 314 402 C302 430 282 440 256 440 C230 440 210 430 198 402 C182 362 140 332 138 282 C136 224 180 184 256 184 Z"
+      fill="#8FA874"
+    />
+    <g clip-path="url(#hc)">
+      <path d="M90 266 Q256 198 422 266 L422 230 Q256 162 90 230Z" fill="#8C8579" stroke-width="8" />
+      <ellipse cx="256" cy="402" rx="74" ry="64" fill="#C9D4AE" stroke="none" />
+    </g>
+    <path
+      d="M256 184 C332 184 376 224 374 282 C372 332 330 362 314 402 C302 430 282 440 256 440 C230 440 210 430 198 402 C182 362 140 332 138 282 C136 224 180 184 256 184 Z"
+      fill="none"
+    />
+    <ellipse cx="208" cy="292" rx="30" ry="32" fill="#5E6B4A" stroke="none" />
+    <ellipse cx="304" cy="292" rx="30" ry="32" fill="#5E6B4A" stroke="none" />
+    <ellipse cx="208" cy="290" rx="22" ry="25" fill="#F4F1DE" stroke-width="6" />
+    <ellipse cx="304" cy="290" rx="20" ry="22" fill="#F4F1DE" stroke-width="6" />
+    <circle cx="200" cy="298" r="5" fill="#2E2219" stroke="none" />
+    <circle cx="312" cy="282" r="4" fill="#2E2219" stroke="none" />
+    <ellipse cx="176" cy="346" rx="15" ry="9" fill="#6F5A7E" stroke="none" opacity=".55" />
+    <ellipse cx="336" cy="346" rx="15" ry="9" fill="#6F5A7E" stroke="none" opacity=".55" />
+    <path d="M222 372 Q256 356 290 372 Q284 414 256 418 Q228 414 222 372Z" fill="#2E2219" stroke-width="5" />
+    <path d="M230 370 L238 384 L246 366 L256 382 L266 364 L274 384 L282 370" fill="#F4F1DE" stroke-width="3" />
+    <path d="M276 408 Q280 426 274 436" fill="none" stroke="#BFD8C8" stroke-width="7" />
+  </g>
+  <g stroke="#2E2219" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <!-- arms reaching out, hands limp -->
+    <path d="M96 150 C70 142 30 140 0 144 L2 158 C32 156 70 160 98 166 Z" fill="#8FA874" />
+    <path d="M2 142 C-12 142 -18 152 -16 164 L-8 168 L-6 158 L0 166 L4 156 Z" fill="#8FA874" />
+    <path d="M124 160 C96 166 50 172 18 180 L22 194 C54 188 98 184 126 178 Z" fill="#8FA874" />
+    <path d="M20 178 C6 180 0 190 4 202 L12 204 L12 194 L18 202 L22 192 Z" fill="#8FA874" />
+    <!-- stitches -->
+    <path d="M100 226 L112 222 M102 218 L104 230 M108 216 L110 228" fill="none" stroke-width="3" />
+  </g>
+  </g>
+</svg>

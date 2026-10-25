@@ -1,6 +1,6 @@
 {
-  "name": "Intervals",
-  "short_name": "Intervals",
+  "name": "Wally: HIIT timer",
+  "short_name": "Wally",
   "description": "HIIT interval timer with an on-device workout log.",
   "start_url": "./",
   "scope": "./",

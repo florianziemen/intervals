@@ -1,10 +1,10 @@
-# AGENTS.md — Intervals (HIIT timer and workout log)
+# AGENTS.md — Wally (HIIT timer and workout log)
 
 Guide for AI coding agents and human contributors working on this repo.
 
 ## What this is
 
-Intervals is a mobile-first HIIT interval timer with an on-device workout log.
+Wally is a mobile-first HIIT interval timer with an on-device workout log.
 It is a static web app hosted on GitHub Pages and installable to the home
 screen as a PWA. There is no server, no build step and no runtime dependencies.
 
@@ -52,11 +52,16 @@ icon-maskable-512.png   Android adaptive icon, artwork inside the central safe z
 apple-touch-icon.png    iOS home-screen icon (180x180)
 wallaby-logo.svg        Logo source artwork (also inlined in index.html header)
 wallaby.svg             Full-body cartoon wallaby (“Wally”) shown with speech bubbles
+zombie.svg              Zombie Wally (wallaby.svg in zombie colors, arms reaching right)
+docs/social-preview.svg GitHub social preview source (uses wallaby.svg, zombie.svg)
+docs/social-preview.png Rendered preview, 1280x640: repo settings and og:image in index.html
 package.json            Scripts only (test, check, lint, format, serve)
 eslint.config.js        Lint rules (no plugins, runs via npx)
 .prettierrc.json        Formatting
 LICENSE                 MIT
+README.md               User-facing intro: features, privacy, install, local run
 AGENTS.md               This file
+.github/workflows/ci.yml  CI: tests (two time zones), check, lint, format check
 ```
 
 All paths are relative (`./`, `sw.js`, `js/main.js`) because the site is
@@ -64,6 +69,13 @@ served from a subpath (`https://<user>.github.io/<repo>/`). Never use
 root-absolute paths like `/sw.js`.
 
 ES modules do not load from `file://`. Always serve the folder over HTTP.
+
+The app used to be called Intervals (repository `intervals`). The storage
+keys (`hiit-*`) and the backup's `"app": "intervals"` keep the old name so
+existing data and backups keep working; don't rename them.
+
+Keep artwork as SVG (new characters, poses, banners) so it can be reused.
+Render PNGs from the SVGs (e.g. headless Chrome `--screenshot`) and keep both.
 
 ## Architecture
 
@@ -82,7 +94,7 @@ ES modules do not load from `file://`. Always serve the folder over HTTP.
 - GitHub Pages deploys from branch main, folder / (root). Pushing to main
   is the release.
 - After changing any cached file, bump the `CACHE` constant in `sw.js`
-  (intervals-v3 -> intervals-v4). This makes installed apps re-download
+  (wally-v1 -> wally-v2). This makes installed apps re-download
   everything. When adding or renaming a file, update `FILES` in `sw.js`;
   `npm test` fails if it is out of sync with `js/`.
 - Users see updates on the second launch after a deploy, because the
@@ -226,7 +238,7 @@ Wally vs zombies (inspired by Zombicide)
   as missed. A missed day with nothing left to lose turns Wally into a
   zombie; the next day with exercise cures him (no gear).
 - Shown as gear slots and a status line in `#fight` under the calendar.
-  A zombie Wally is tinted (`.zombie img`), greets with `GREETINGS.zombie`,
+  A zombie Wally is drawn with `zombie.svg` (`showWally()` in `js/ui/dom.js`), greets with `GREETINGS.zombie`,
   and the day's first workout cheers a cure or a new item.
 
 PWA bits
