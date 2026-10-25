@@ -60,13 +60,18 @@ export function twoTap(button, armedText, onConfirm) {
 }
 
 /**
- * Shows Wally, or zombie Wally, in the box's image.
- * @param {HTMLElement} box  element holding the wallaby <img>
+ * Shows Wally, or zombie Wally, in the box's image, with an outfit on top.
+ * @param {HTMLElement} box  element holding the .wb-fig with both images
  * @param {boolean} zombie
+ * @param {string} [outfit]  name of a file in outfits/, without .svg
  */
-export function showWally(box, zombie) {
+export function showWally(box, zombie, outfit) {
   box.classList.toggle('zombie', zombie);
   const img = /** @type {HTMLImageElement} */ (box.querySelector('img'));
   img.src = zombie ? 'zombie.svg' : 'wallaby.svg';
   img.width = zombie ? 244 : 220;
+  const over = /** @type {HTMLImageElement} */ (box.querySelector('img.outfit'));
+  over.hidden = !outfit;
+  if (outfit) over.src = `outfits/${outfit}.svg`;
+  else over.removeAttribute('src');
 }

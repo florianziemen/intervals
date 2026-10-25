@@ -5,6 +5,7 @@
 // its set at random, so important news usually wins but not always.
 
 import { MAX_LEVEL, TRAITS, fightState } from './fight.js';
+import { activeSeason } from './seasons.js';
 import { addDays, dayKey, summary, totalsByDay } from './stats.js';
 
 /** @typedef {() => number} Random  returns a number in [0, 1) */
@@ -31,6 +32,7 @@ export const WEIGHTS = Object.freeze({
     streak: 3,
     today: 3,
     busyWeek: 3,
+    seasonal: 4, // holidays and events, see js/seasons.js
     partOfDay: 2,
     any: 1,
   },
@@ -38,6 +40,7 @@ export const WEIGHTS = Object.freeze({
     survived: 6, // kept a gearless Wally from turning
     biggest: 5,
     weekCount: 3,
+    seasonal: 3,
     full: 2,
   },
 });
@@ -367,6 +370,8 @@ export function greeting(log, now, rand = Math.random) {
   if (today) options.push([W.today, P.today]);
   if (streak >= 2) options.push([W.streak, P.streak]);
   if (thisWeek >= 3) options.push([W.busyWeek, P.busyWeek]);
+  const season = activeSeason(now);
+  if (season) options.push([W.seasonal, season.greetings]);
   options.push([W.partOfDay, GREETINGS[partOfDay(now)]], [W.any, GREETINGS.any]);
   return choose(options, c, rand);
 }
@@ -402,6 +407,8 @@ export function cheer({ full }, log, now, rand = Math.random) {
   if (firstToday && !fight.traits.length) options.push([W.survived, P.survived]);
   if (today >= best && totals.size > 1) options.push([W.biggest, P.biggest]);
   if (thisWeek >= 2) options.push([W.weekCount, P.weekCount]);
+  const season = activeSeason(now);
+  if (season) options.push([W.seasonal, season.cheers]);
   options.push([W.full, CHEERS.full]);
   return choose(options, c, rand);
 }

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 296" width="220" height="296">
+  <!-- Easter: two painted eggs by the feet. Same coordinates as wallaby.svg. -->
+  <g stroke="#2E2219" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <ellipse cx="18" cy="278" rx="10" ry="13" fill="#7FC8F8" />
+    <path d="M9 276 L14 272 L18 276 L22 272 L27 276" fill="none" stroke="#FFFFFF" />
+    <ellipse cx="37" cy="283" rx="8" ry="10" fill="#F7A1C4" />
+    <circle cx="34" cy="281" r="1.5" fill="#FFFFFF" stroke="none" />
+    <circle cx="40" cy="285" r="1.5" fill="#FFFFFF" stroke="none" />
+  </g>
+</svg>

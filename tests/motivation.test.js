@@ -16,6 +16,7 @@ import {
   pepTalk,
   pick,
 } from '../js/motivation.js';
+import { SEASONS } from '../js/seasons.js';
 
 const at = (y, m, d, h = 12) => new Date(y, m - 1, d, h);
 const session = (date, id = date.toISOString()) => ({
@@ -123,6 +124,29 @@ describe('motivation', () => {
       seen.add(greeting(log, now, () => rolls.shift() ?? 0));
     }
     assert.equal(seen.size, GREETINGS.any.length);
+  });
+
+  it('adds the season to greetings and cheers', () => {
+    // Halloween, no gear, nothing yet today: emptyPawed (8) then seasonal (4).
+    const log = [session(at(2026, 10, 27))];
+    const now = at(2026, 10, 28);
+    const halloween = SEASONS.find((s) => s.key === 'halloween');
+    const W = WEIGHTS.greeting;
+    const total = W.emptyPawed + W.seasonal + W.partOfDay + W.any;
+    const rolls = [(W.emptyPawed + 0.5) / total, 0];
+    assert.equal(
+      greeting(log, now, () => rolls.shift() ?? 0),
+      halloween.greetings[0],
+    );
+    // Cheer options: survived, biggest day, week count, then seasonal.
+    const C = WEIGHTS.cheer;
+    const before = C.survived + C.biggest + C.weekCount;
+    const cheerRolls = [(before + 0.5) / (before + C.seasonal + C.full), 0];
+    const done = [...log, session(now)];
+    assert.equal(
+      cheer({ full: true }, done, now, () => cheerRolls.shift() ?? 0),
+      halloween.cheers[0],
+    );
   });
 
   describe('pep talks', () => {

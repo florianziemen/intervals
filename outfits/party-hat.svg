@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 296" width="220" height="296">
+  <!-- New Year: party hat between the ears. Same coordinates as wallaby.svg. -->
+  <g stroke="#2E2219" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M94 64 L110 16 L126 64 Q110 70 94 64 Z" fill="#E8506A" />
+    <path d="M99 50 L121 50 M104 36 L116 36" stroke="#F3E25A" stroke-width="4" />
+    <circle cx="110" cy="14" r="6" fill="#F3E25A" />
+  </g>
+</svg>

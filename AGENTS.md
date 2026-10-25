@@ -38,6 +38,7 @@ js/stats.js             Day totals, week/streak/minutes, calendar, emoji tiers (
 js/workout.js           Phase list builder and the Workout engine (pure, clock injected)
 js/fight.js             Wally vs zombies: gear earned and lost from the log (pure)
 js/motivation.js        Wallaby greeting and post-workout cheer messages (pure, rng injected)
+js/seasons.js           Seasonal occasions: date ranges, lines, outfits (pure)
 js/storage.js           JSON over Web Storage, all access guarded
 js/store.js             App state; the only module that reads/writes storage
 js/feedback.js          Beeps (WebAudio), vibration, screen wake lock
@@ -53,6 +54,7 @@ apple-touch-icon.png    iOS home-screen icon (180x180)
 wallaby-logo.svg        Logo source artwork (also inlined in index.html header)
 wallaby.svg             Full-body cartoon wallaby (“Wally”) shown with speech bubbles
 zombie.svg              Zombie Wally (wallaby.svg in zombie colors, arms reaching right)
+outfits/*.svg           Seasonal overlays drawn on top of Wally, same 220x296 coordinates
 docs/social-preview.svg GitHub social preview source (uses wallaby.svg, zombie.svg)
 docs/social-preview.png Rendered preview, 1280x640: repo settings and og:image in index.html
 package.json            Scripts only (test, check, lint, format, serve)
@@ -80,7 +82,7 @@ Render PNGs from the SVGs (e.g. headless Chrome `--screenshot`) and keep both.
 ## Architecture
 
 - Pure logic modules (format, settings, groups, log, stats, workout,
-  fight, motivation) have no DOM or storage access and are fully unit tested. Put
+  fight, motivation, seasons) have no DOM or storage access and are fully unit tested. Put
   new logic there.
 - `store.js` holds `{settings, groups, log}`, persists every change and
   notifies subscribers. Storage is injected (`createStore(createStorage())`),
@@ -226,6 +228,24 @@ Wallaby
   certain; "it's evening" is rare when anything else applies. First
   workout, zombie, cure and new gear always win outright. A test enforces at least 3 lines per set, no
   duplicates and no straight apostrophes.
+
+Seasons
+
+- `SEASONS` in `js/seasons.js` lists occasions that last several days,
+  mostly from Wally's Australian point of view (seasons are flipped for him):
+  New Year (1–7 Jan), Mardi Gras (14 Feb–7 Mar), Easter (Good Friday to
+  Easter Monday, computed), Pride (June), magpie swooping season
+  (September), Halloween (24–31 Oct), Christmas (20–25 Dec) and the
+  Boxing Day Test (26–30 Dec). Ranges never overlap (a test checks this).
+- `activeSeason(now)` adds the season's lines as one more situation in
+  `greeting()` and `cheer()` (`WEIGHTS.*.seasonal`). Pep talks stay unchanged.
+- Each season names an outfit in `outfits/`, drawn over Wally by
+  `showWally(box, zombie, outfit)`. The overlays use wallaby.svg's
+  coordinates; on zombie Wally CSS mirrors and narrows them to fit
+  zombie.svg. Keep outfits on the head, body or ground, since the arms differ.
+- Left out on purpose: Australia Day, Anzac Day, Remembrance Day, NAIDOC
+  and Reconciliation Week. Don't use Aboriginal art styles or sacred
+  objects as decoration.
 
 Wally vs zombies (inspired by Zombicide)
 
