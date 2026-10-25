@@ -54,6 +54,8 @@ export const GREETINGS = Object.freeze({
     'Rise and hop!',
     'Zombies sleep in. We don’t.',
     'Coffee can wait. Well, a few rounds can’t hurt first.',
+    'Up before the kookaburras? Good on ya.',
+    'Morning, mate! The early roo gets the… well, the workout.',
   ],
   afternoon: [
     'Perfect time for a quick hop.',
@@ -61,6 +63,8 @@ export const GREETINGS = Object.freeze({
     'A few rounds now, a better evening later.',
     'Lunch digested? Let’s move.',
     'Afternoon patrol. Any zombies need outrunning?',
+    'Arvo workout? Bonza idea.',
+    'Hot arvo? It’s cooler here than in the outback. No excuses.',
   ],
   evening: [
     'One short session before the couch?',
@@ -68,6 +72,8 @@ export const GREETINGS = Object.freeze({
     'Evening hops count double. Well, almost.',
     'Zombies come out at night. Let’s be ready.',
     'Still time today. A short one counts.',
+    'Wallabies come out at dusk. Your turn.',
+    'Sun’s going down over the bush. One more hop before tea?',
   ],
   any: [
     'You don’t have to go fast. You just have to go.',
@@ -80,6 +86,16 @@ export const GREETINGS = Object.freeze({
     'Your future self says thanks in advance.',
     'Hop first, think later.',
     'Rule one of the apocalypse: cardio.',
+    'Wallaby. Say it fast: “want-to-be”. So, what do you want to be today?',
+    'Wannabes wait. Wallabies hop.',
+    'Every wallaby started out as a wannabe.',
+    '“I want to be fit.” Lovely. Wallaby fit takes ten minutes.',
+    'Wallaby, wannabe, gonna-be. Let’s skip straight to gonna-be.',
+    'No worries, mate. Just a few rounds.',
+    'Fair dinkum, a few rounds won’t hurt.',
+    'She’ll be right. Once you start, anyway.',
+    'Crikey, is it workout o’clock already?',
+    'Even a drop bear would be impressed by a workout today.',
   ],
   zombie: [
     'Braaains… I mean, workout? A workout would cure me.',
@@ -89,6 +105,8 @@ export const GREETINGS = Object.freeze({
     'I’ve gone a bit green. One workout and I’m back.',
     'Grrr… burpees… The cure is burpees.',
     'Don’t look at me like that. Just start the timer.',
+    'Braaains… I wannabe… a wallaby again. Workout?',
+    'Strewth. I’ve gone full zombie, mate. Help a roo out.',
   ],
 });
 
@@ -147,6 +165,12 @@ export const CHEERS = Object.freeze({
     'Every round, every second. Ripper!',
     'That’s how wallabies stay off the menu.',
     'Stretch, sip, smile. Great work.',
+    'Wannabe? Nah. Wallaby.',
+    'You wanted to be fit. Now you’re a bit fitter. That’s how wannabes become wallabies.',
+    'Not a wannabe any more. Honorary wallaby, that’s you.',
+    'Good on ya, mate!',
+    'Fair dinkum effort, that.',
+    'Strewth! Look at you go.',
   ],
   partial: [
     'Every round counts. Nice work.',
@@ -154,6 +178,8 @@ export const CHEERS = Object.freeze({
     'Short hop today, still a hop.',
     'Enough to keep the zombies guessing.',
     'A bit is better than a zombie. Logged!',
+    'Wannabe today, wallaby tomorrow.',
+    'No worries. She’ll be right next time.',
   ],
 });
 
@@ -163,6 +189,7 @@ export const PERSONAL_CHEERS = Object.freeze({
     'You cured me! No more zombie. Thanks, mate.',
     'I’m back! My tail is brown again. Thank you!',
     'Brains? No thanks. I’m a wallaby again!',
+    'Zombie, wannabe, wallaby. Back to the real thing. Thanks, mate!',
   ],
   gain: [
     (c) => `A whole week, every single day! I found ${c.trait?.name} ${c.trait?.emoji}`,
@@ -173,6 +200,7 @@ export const PERSONAL_CHEERS = Object.freeze({
     'Your biggest day yet! Top roo.',
     'Most exercise in a day so far. Champion!',
     'New personal best day. Zombies, take note.',
+    'Biggest day yet. You’re no wannabe, you’re a big red!',
   ],
   weekCount: [
     (c) => `Workout ${c.thisWeek} this week. Keep hopping!`,
@@ -194,6 +222,8 @@ export const PEP_TALKS = Object.freeze({
     'Let’s show those zombies what we’re made of.',
     'Nice and steady to start. Then we bounce.',
     'Timer’s running. No turning back now!',
+    'Wannabes watch. Wallabies hop. Let’s hop.',
+    'Righto, let’s get stuck in!',
   ],
   rest: [
     'Breathe. You’re doing great.',
@@ -222,6 +252,11 @@ export const PEP_TALKS = Object.freeze({
     'Feel that? That’s you getting stronger.',
     'Don’t sit down. Keep the legs moving.',
     'Easy breaths. You’re nearly ready again.',
+    'You wanted to be here. Look, you are.',
+    'Wannabe, gonna-be, doing it. You’re at “doing it”.',
+    'Flat out like a lizard drinking. Love it.',
+    'Too easy, mate.',
+    'Good on ya. Keep it up.',
   ],
   setBreak: [
     'Set done! Catch your breath.',
@@ -232,11 +267,13 @@ export const PEP_TALKS = Object.freeze({
     'Last set coming. Leave it all here!',
     'One more set and we’re done. Let’s finish strong.',
     'Final set next. You’ve come this far!',
+    'Last set, then it’s smoko.',
   ],
   lastRound: [
     'Last round! Give it everything.',
     'One more! Make it your best.',
     'Final round. Hop like the zombies are right behind you.',
+    'Last one. Go full kangaroo!',
   ],
 });
 
